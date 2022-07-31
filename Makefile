@@ -63,3 +63,10 @@ clean:
 	find $(srcdir) $(testsdir) -name '__pycache__' -exec rm -rf {} +
 	find $(srcdir) $(testsdir) -type d -empty -delete
 	rm -rf poetry.lock dist .mypy_cache .pytest_cache .coverage
+
+
+# Misc
+
+.PHONY: run-aws-mock
+run-aws-mock:
+	poetry run moto_server -p 4566
