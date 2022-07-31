@@ -32,6 +32,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.8"
 boto3 = "^1.24"
+click = "^8.1"
 pydantic = "^1.9"
 tomli = "^2.0"
 
@@ -46,6 +47,9 @@ pytest = "^7.1"
 pytest-cov = "^3.0"
 pytest-xdist = "^2.5"
 moto = {version = "^3.1", extras = ["server"]}
+
+[tool.poetry.scripts]
+qldebugger = 'qldebugger.cli:cli'
 
 [tool.isort]
 sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
