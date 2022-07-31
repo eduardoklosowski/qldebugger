@@ -1,0 +1,44 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - "*"
+    tags:
+      - "*"
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10"]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup poetry
+        run: pipx install poetry
+
+      - name: Generate datefile
+        run: date +%U > datefile
+
+      - name: Setup python
+        id: setup-python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: poetry
+          cache-dependency-path: |
+            pyproject.toml
+            datefile
+
+      - name: Install dependencies
+        if: steps.setup-python.outputs.cache-hit != 'true'
+        run: poetry install
+
+      - name: Check pytest
+        run: make test-pytest
