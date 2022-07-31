@@ -31,6 +31,8 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.8"
+pydantic = "^1.9"
+tomli = "^2.0"
 
 [tool.poetry.dev-dependencies]
 isort = "^5.10"
@@ -58,6 +60,9 @@ recursive = true
 aggressive = 3
 
 [tool.mypy]
+plugins = [
+  "pydantic.mypy",
+]
 files = [
   "qldebugger/**/*.py",
   "tests/**/*.py",
