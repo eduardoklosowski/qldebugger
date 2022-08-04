@@ -13,6 +13,13 @@ def cli() -> None:
     logging.basicConfig(level=logging.INFO, format='%(levelname)s:qldebugger:%(message)s')
 
 
+@cli.command()
+@click.argument('event_source_mapping_name')
+def run(event_source_mapping_name: str) -> None:
+    load_config(CONFIG_FILENAME)
+    actions.event_source_mapping.receive_messages_and_run_lambda(event_source_mapping_name=event_source_mapping_name)
+
+
 # Infra
 
 @cli.group()
