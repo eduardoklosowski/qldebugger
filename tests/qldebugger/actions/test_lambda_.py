@@ -102,3 +102,42 @@ class TestRunLambda:
         mock_get_lambda_function.return_value = lambda_function
 
         run_lambda(lambda_name=lambda_name, event=event)
+
+    @patch('qldebugger.actions.lambda_.get_config')
+    @patch('qldebugger.actions.lambda_.get_lambda_function')
+    @patch('qldebugger.actions.lambda_.inject_aws_config_in_client')
+    def test_run_lambda_with_aws_configuration_injection(
+        self,
+        mock_inject_aws_config_in_client: Mock,
+        mock_get_lambda_function: Mock,
+        mock_aws_get_config: Mock,
+    ) -> None:
+        lambda_name = randstr()
+        event: 'ReceiveMessageResultTypeDef' = {
+            'Messages': [],
+            'ResponseMetadata': cast(Any, None),
+        }
+        service_name = randstr()
+        aws_access_key_id = randstr()
+        aws_secret_access_key = randstr()
+        region_name = randstr()
+
+        def lambda_function(event: 'ReceiveMessageResultTypeDef', context: None) -> None:
+            import boto3
+            boto3.client(  # type: ignore
+                service_name=service_name,
+                aws_access_key_id=aws_access_key_id,
+                aws_secret_access_key=aws_secret_access_key,
+                region_name=region_name,
+            )
+
+        mock_get_lambda_function.return_value = lambda_function
+
+        run_lambda(lambda_name=lambda_name, event=event)
+
+        mock_inject_aws_config_in_client.assert_called_once_with(
+            service_name=service_name,
+            aws_access_key_id=aws_access_key_id,
+            aws_secret_access_key=aws_secret_access_key,
+            region_name=region_name,
+        )
