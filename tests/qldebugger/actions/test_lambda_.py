@@ -31,10 +31,12 @@ class TestGetLambdaHandler:
 
 
 class TestRunLambda:
+    @patch('qldebugger.actions.lambda_.get_config')
     @patch('qldebugger.actions.lambda_.get_lambda_function')
     def test_run_lambda_with_success(
         self,
         mock_get_lambda_function: Mock,
+        mock_get_config: Mock,
     ) -> None:
         lambda_name = randstr()
         event: 'ReceiveMessageResultTypeDef' = {
@@ -51,10 +53,12 @@ class TestRunLambda:
         mock_get_lambda_function.return_value.asser_called_once_with(event, None)
         assert returned == mock_get_lambda_function.return_value.return_value
 
+    @patch('qldebugger.actions.lambda_.get_config')
     @patch('qldebugger.actions.lambda_.get_lambda_function')
     def test_run_lambda_with_error(
         self,
         mock_get_lambda_function: Mock,
+        mock_get_config: Mock,
     ) -> None:
         lambda_name = randstr()
         event: 'ReceiveMessageResultTypeDef' = {
@@ -74,3 +78,27 @@ class TestRunLambda:
         mock_get_lambda_function.assert_called_once_with(lambda_name=lambda_name)
         mock_get_lambda_function.return_value.asser_called_once_with(event, None)
         assert exc_info.value == error
+
+    @patch('qldebugger.actions.lambda_.get_config')
+    @patch('qldebugger.actions.lambda_.get_lambda_function')
+    def test_run_lambda_with_environment_variables(
+        self,
+        mock_get_lambda_function: Mock,
+        mock_get_config: Mock,
+    ) -> None:
+        lambda_name = randstr()
+        environment = {randstr(): randstr() for _ in range(randint(2, 5))}
+        event: 'ReceiveMessageResultTypeDef' = {
+            'Messages': [],
+            'ResponseMetadata': cast(Any, None),
+        }
+
+        def lambda_function(event: 'ReceiveMessageResultTypeDef', context: None) -> None:
+            import os
+            for k, v in environment.items():
+                assert os.environ[k] == v
+
+        mock_get_config.return_value.lambdas = {lambda_name: ConfigLambda(handler='a.a', environment=environment)}
+        mock_get_lambda_function.return_value = lambda_function
+
+        run_lambda(lambda_name=lambda_name, event=event)

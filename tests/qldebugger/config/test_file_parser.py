@@ -30,6 +30,11 @@ class TestConfigLambda:
         'handler': f'{randstr()}.{randstr()}',
     }
 
+    def test_default_values(self) -> None:
+        returned = ConfigLambda(**self.DEFAULT_ARGS)
+
+        assert returned.environment == {}
+
     def test_handler_argument(self) -> None:
         module_name = '.'.join(randstr() for _ in range(randint(3, 10)))
         function_name = randstr()
@@ -70,6 +75,13 @@ class TestConfigLambda:
             'loc': tuple(['handler']),
             'msg': 'should have a module and function names',
         } in exc_info.value.errors()
+
+    def test_environment(self) -> None:
+        args = self.DEFAULT_ARGS.copy()
+        args['environment'] = {randstr(): randstr() for _ in range(randint(2, 5))}
+        returned = ConfigLambda(**args)
+
+        assert returned.environment == args['environment']
 
 
 class TestConfigEventSourceMapping:

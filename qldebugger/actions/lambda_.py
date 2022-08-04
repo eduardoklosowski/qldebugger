@@ -2,6 +2,7 @@ import logging
 from importlib import import_module
 from traceback import format_exc
 from typing import TYPE_CHECKING, Any, Callable
+from unittest.mock import patch
 
 from ..config import get_config
 
@@ -20,10 +21,12 @@ def get_lambda_function(*, lambda_name: str) -> Callable[['ReceiveMessageResultT
 
 
 def run_lambda(*, lambda_name: str, event: 'ReceiveMessageResultTypeDef') -> Any:
+    environment = get_config().lambdas[lambda_name].environment
     lambda_handler = get_lambda_function(lambda_name=lambda_name)
     logger.info('Running %r lambda...', lambda_name)
     try:
-        result = lambda_handler(event, None)
+        with patch.dict('os.environ', environment, True):
+            result = lambda_handler(event, None)
         logger.info('Result: %r', result)
         return result
     except Exception:

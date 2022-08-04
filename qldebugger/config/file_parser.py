@@ -24,6 +24,7 @@ class NameHandlerTuple(NamedTuple):
 
 class ConfigLambda(BaseModel):
     handler: NameHandlerTuple
+    environment: Dict[str, str] = Field(default_factory=dict)
 
     @validator('handler', pre=True)
     def _split_handler(cls, v: Any) -> Tuple[str, str]:
