@@ -37,7 +37,8 @@ pydantic = "^1.9"
 tomli = "^2.0"
 
 [tool.poetry.dev-dependencies]
-boto3-stubs = {version = "^1.24", extras = ["sqs"]}
+aws-lambda-typing = "^2.13"
+boto3-stubs = {version = "^1.24", extras = ["sqs", "sts"]}
 isort = "^5.10"
 autopep8 = "^1.7"
 flake8 = "^5.0"
@@ -104,4 +105,5 @@ branch = true
 exclude_lines = [
   "pragma: no cover",
   "if (typing\\.)?TYPE_CHECKING:",
+  "@overload",
 ]

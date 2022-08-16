@@ -1,5 +1,5 @@
 from random import randint
-from typing import TYPE_CHECKING, Any, cast
+from typing import Any
 from unittest.mock import Mock, patch
 
 import pytest
@@ -7,32 +7,25 @@ import pytest
 from qldebugger.example.lambdas import exec_fail, print_messages
 from tests.utils import randstr
 
-if TYPE_CHECKING:
-    from mypy_boto3_sqs.type_defs import ReceiveMessageResultTypeDef
-
 
 class TestPrintMessages:
     @patch('qldebugger.example.lambdas.print')
     def test_run(self, mock_print: Mock) -> None:
-        event: ReceiveMessageResultTypeDef = {
-            'Messages': [{'Body': randstr()} for _ in range(randint(2, 10))],
-            'ResponseMetadata': cast(Any, None),
+        event: Any = {
+            'Records': [{'body': randstr()} for _ in range(randint(2, 10))],
         }
 
         print_messages(event, None)
 
-        assert mock_print.call_count == len(event['Messages']) + 1
-        for message in event['Messages']:
-            mock_print.assert_any_call(message['Body'])
-        mock_print.assert_any_call(f'Total: {len(event["Messages"])} messages')
+        assert mock_print.call_count == len(event['Records']) + 1
+        for message in event['Records']:
+            mock_print.assert_any_call(message['body'])
+        mock_print.assert_any_call(f'Total: {len(event["Records"])} messages')
 
 
 class TestExecFail:
     def test_run(self) -> None:
-        event: ReceiveMessageResultTypeDef = {
-            'Messages': [],
-            'ResponseMetadata': cast(Any, None),
-        }
+        event: Any = {}
 
         with pytest.raises(Exception) as exc_info:
             exec_fail(event, None)

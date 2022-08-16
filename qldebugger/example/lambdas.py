@@ -1,14 +1,14 @@
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from mypy_boto3_sqs.type_defs import ReceiveMessageResultTypeDef
+    from aws_lambda_typing.events import SQSEvent
 
 
-def print_messages(event: 'ReceiveMessageResultTypeDef', context: None) -> None:
-    for message in event['Messages']:
-        print(message['Body'])
-    print(f'Total: {len(event["Messages"])} messages')
+def print_messages(event: 'SQSEvent', context: None) -> None:
+    for message in event['Records']:
+        print(message['body'])
+    print(f'Total: {len(event["Records"])} messages')
 
 
-def exec_fail(event: 'ReceiveMessageResultTypeDef', context: None) -> None:
+def exec_fail(event: 'SQSEvent', context: None) -> None:
     raise Exception('Lambda execution fail')

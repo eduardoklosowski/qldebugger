@@ -1,5 +1,5 @@
 from random import randint
-from typing import TYPE_CHECKING, Any, cast
+from typing import TYPE_CHECKING, cast
 from unittest.mock import Mock, patch
 
 import pytest
@@ -9,6 +9,7 @@ from qldebugger.config.file_parser import ConfigLambda
 from tests.utils import randstr
 
 if TYPE_CHECKING:
+    from aws_lambda_typing.events import SQSEvent
     from mypy_boto3_sqs.type_defs import ReceiveMessageResultTypeDef
 
 
@@ -39,14 +40,7 @@ class TestRunLambda:
         mock_get_config: Mock,
     ) -> None:
         lambda_name = randstr()
-        event: 'ReceiveMessageResultTypeDef' = {
-            'Messages': [
-                {'MessageId': randstr(), 'ReceiptHandle': randstr(), 'Body': randstr()}
-                for _ in range(randint(1, 10))
-            ],
-            'ResponseMetadata': cast(Any, None),
-        }
-
+        event: 'SQSEvent' = cast('SQSEvent', object())
         returned = run_lambda(lambda_name=lambda_name, event=event)
 
         mock_get_lambda_function.assert_called_once_with(lambda_name=lambda_name)
@@ -61,13 +55,7 @@ class TestRunLambda:
         mock_get_config: Mock,
     ) -> None:
         lambda_name = randstr()
-        event: 'ReceiveMessageResultTypeDef' = {
-            'Messages': [
-                {'MessageId': randstr(), 'ReceiptHandle': randstr(), 'Body': randstr()}
-                for _ in range(randint(1, 10))
-            ],
-            'ResponseMetadata': cast(Any, None),
-        }
+        event: 'SQSEvent' = cast('SQSEvent', object())
         error = Exception(randstr())
 
         mock_get_lambda_function.return_value.side_effect = error
@@ -88,10 +76,7 @@ class TestRunLambda:
     ) -> None:
         lambda_name = randstr()
         environment = {randstr(): randstr() for _ in range(randint(2, 5))}
-        event: 'ReceiveMessageResultTypeDef' = {
-            'Messages': [],
-            'ResponseMetadata': cast(Any, None),
-        }
+        event: 'SQSEvent' = cast('SQSEvent', object())
 
         def lambda_function(event: 'ReceiveMessageResultTypeDef', context: None) -> None:
             import os
@@ -113,10 +98,7 @@ class TestRunLambda:
         mock_aws_get_config: Mock,
     ) -> None:
         lambda_name = randstr()
-        event: 'ReceiveMessageResultTypeDef' = {
-            'Messages': [],
-            'ResponseMetadata': cast(Any, None),
-        }
+        event: 'SQSEvent' = cast('SQSEvent', object())
         service_name = randstr()
         aws_access_key_id = randstr()
         aws_secret_access_key = randstr()

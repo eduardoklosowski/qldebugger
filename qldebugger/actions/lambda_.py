@@ -9,20 +9,20 @@ from qldebugger.aws import inject_aws_config_in_client
 from ..config import get_config
 
 if TYPE_CHECKING:
-    from mypy_boto3_sqs.type_defs import ReceiveMessageResultTypeDef
+    from aws_lambda_typing.events import SQSEvent
 
 logger = logging.getLogger(__name__)
 
 
-def get_lambda_function(*, lambda_name: str) -> Callable[['ReceiveMessageResultTypeDef', None], Any]:
+def get_lambda_function(*, lambda_name: str) -> Callable[['SQSEvent', None], Any]:
     logger.debug('Importing lambda_handler of %r...', lambda_name)
     module_name, function_name = get_config().lambdas[lambda_name].handler
-    lambda_handler: Callable[['ReceiveMessageResultTypeDef', None], Any] = \
+    lambda_handler: Callable[['SQSEvent', None], Any] = \
         getattr(import_module(module_name), function_name)
     return lambda_handler
 
 
-def run_lambda(*, lambda_name: str, event: 'ReceiveMessageResultTypeDef') -> Any:
+def run_lambda(*, lambda_name: str, event: 'SQSEvent') -> Any:
     environment = get_config().lambdas[lambda_name].environment
     with patch('boto3.client', inject_aws_config_in_client):
         lambda_handler = get_lambda_function(lambda_name=lambda_name)

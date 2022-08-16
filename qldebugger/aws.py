@@ -1,6 +1,6 @@
 import logging
 from functools import lru_cache
-from typing import TYPE_CHECKING, Any, Literal, Optional, Union
+from typing import TYPE_CHECKING, Any, Literal, Optional, Union, overload
 
 import boto3
 from botocore.config import Config
@@ -9,12 +9,20 @@ from .config import get_config
 
 if TYPE_CHECKING:
     from mypy_boto3_sqs import SQSClient
+    from mypy_boto3_sts import STSClient
 
 logger = logging.getLogger(__name__)
 
 
-@lru_cache(maxsize=None)
-def get_client(service_name: Literal['sqs'], /) -> 'SQSClient':
+@overload
+def get_client(service_name: Literal['sqs'], /) -> 'SQSClient': ...
+
+
+@overload
+def get_client(service_name: Literal['sts'], /) -> 'STSClient': ...
+
+
+def get_client(service_name, /):  # type: ignore[no-untyped-def]
     aws_config = get_config().aws
     logger.debug('Connecting to %s service...', service_name)
     session = boto3.Session(
@@ -28,6 +36,9 @@ def get_client(service_name: Literal['sqs'], /) -> 'SQSClient':
         service_name=service_name,
         endpoint_url=aws_config.endpoint_url,
     )
+
+
+get_client = lru_cache(maxsize=None)(get_client)  # type: ignore
 
 
 def inject_aws_config_in_client(
