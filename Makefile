@@ -56,13 +56,24 @@ test-pytest:
 	poetry run pytest --numprocesses=auto $(testsdir)
 
 
+# Doc
+
+.PHONY: doc-serve doc-build
+
+doc-serve:
+	poetry run mkdocs serve
+
+doc-build:
+	poetry run mkdocs build
+
+
 # Clean
 
 .PHONY: clean
 clean:
 	find $(srcdir) $(testsdir) -name '__pycache__' -exec rm -rf {} +
 	find $(srcdir) $(testsdir) -type d -empty -delete
-	rm -rf poetry.lock dist .mypy_cache .pytest_cache .coverage
+	rm -rf poetry.lock dist .mypy_cache .pytest_cache .coverage docs-site
 
 
 # Misc

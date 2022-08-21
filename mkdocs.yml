@@ -1,0 +1,16 @@
+site_name: Queue Lambda Debugger
+theme: readthedocs
+
+repo_url: https://github.com/eduardoklosowski/qldebugger
+edit_uri: blob/main/docs/
+
+docs_dir: docs
+site_dir: docs-site
+nav:
+  - Home: index.md
+  - getting-started.md
+  - install.md
+  - cli.md
+  - config.md
+  - Debuggers:
+    - debuggers/vscode.md
