@@ -47,7 +47,7 @@ bandit = "^1.7"
 pytest = "^7.1"
 pytest-cov = "^3.0"
 pytest-xdist = "^2.5"
-moto = {version = "^3.1", extras = ["server"]}
+moto = {version = "^4.0", extras = ["server"]}
 
 [tool.poetry.scripts]
 qldebugger = 'qldebugger.cli:cli'
