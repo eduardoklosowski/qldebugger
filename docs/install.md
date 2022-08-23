@@ -28,8 +28,8 @@ Outra opção é utilizar os pacotes gerados no lançamento de uma versão. Para
 
 ```sh
 # Pacote Wheel
-pip install https://github.com/eduardoklosowski/qldebugger-teste/releases/download/v0.1.0/qldebugger-0.1.0-py3-none-any.whl
+pip install https://github.com/eduardoklosowski/qldebugger/releases/download/v0.1.0/qldebugger-0.1.0-py3-none-any.whl
 
 # Fonte
-pip install https://github.com/eduardoklosowski/qldebugger-teste/releases/download/v0.1.0/qldebugger-0.1.0.tar.gz
+pip install https://github.com/eduardoklosowski/qldebugger/releases/download/v0.1.0/qldebugger-0.1.0.tar.gz
 ```
