@@ -58,6 +58,9 @@ jobs:
       - name: Check flake8
         run: make lint-flake8
 
+      - name: Check ruff
+        run: make lint-ruff
+
       - name: Check mypy
         run: make lint-mypy
 

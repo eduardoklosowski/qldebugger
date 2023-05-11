@@ -38,6 +38,7 @@ isort = "^5.10"
 pycodestyle = "^2.9"
 autopep8 = "^1.7"
 flake8 = "^5.0"
+ruff = "0.0.265"
 mypy = "^0.971"
 bandit = "^1.7"
 pytest = "^7.1"
@@ -65,6 +66,23 @@ src_paths = ["qldebugger", "tests"]
 [tool.autopep8]
 recursive = true
 aggressive = 3
+
+[tool.ruff]
+target-version = "py38"
+line-length = 119
+select = ["ALL"]
+ignore = ["D", "ANN101", "ANN102", "ANN401", "FBT", "B007", "COM812", "C409", "EM", "PT011", "PT012", "SIM118", "TID252", "ARG", "PTH", "PGH003", "PLC0414", "PLR0913", "PLR2004", "PLW0603", "TRY"]
+
+[tool.ruff.per-file-ignores]
+"qldebugger/example/*.py" = ["T20"]
+"tests/*.py" = ["S101", "S311"]
+
+[tool.ruff.pep8-naming]
+classmethod-decorators = ["pydantic.validator"]
+
+[tool.ruff.flake8-quotes]
+inline-quotes = "single"
+multiline-quotes = "single"
 
 [tool.mypy]
 follow_imports = "normal"
