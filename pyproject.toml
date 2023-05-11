@@ -4,10 +4,10 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "qldebugger"
-version = "0.0.1"
+version = "0.0.0"
 description = "Utility to debug AWS lambdas with SQS messages"
-license = "MIT"
 authors = ["Eduardo Klosowski <eduardo_klosowski@yahoo.com>"]
+license = "MIT"
 readme = "README.md"
 repository = "https://github.com/eduardoklosowski/qldebugger"
 documentation = "http://qldebugger.readthedocs.io/"
@@ -15,16 +15,8 @@ classifiers = [
   "Development Status :: 1 - Planning",
   "Environment :: Console",
   "Intended Audience :: Developers",
-  "License :: OSI Approved :: MIT License",
   "Natural Language :: English",
   "Operating System :: OS Independent",
-  "Programming Language :: Python",
-  "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.8",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: Implementation :: CPython",
   "Topic :: Software Development :: Debuggers",
   "Topic :: System :: Emulators",
   "Typing :: Typed",
@@ -60,28 +52,17 @@ line_length = 119
 multi_line_output = "HANGING_INDENT"
 indent = "    "
 float_to_top = true
-src_paths = [
-  "qldebugger",
-  "tests",
-]
+src_paths = ["qldebugger", "tests"]
 
 [tool.autopep8]
 recursive = true
 aggressive = 3
 
 [tool.mypy]
-plugins = [
-  "pydantic.mypy",
-]
-files = [
-  "qldebugger/**/*.py",
-  "tests/**/*.py",
-]
 follow_imports = "normal"
 warn_unused_configs = true
 show_column_numbers = true
 show_error_codes = true
-
 disallow_any_generics = true
 disallow_subclassing_any = true
 disallow_untyped_defs = true
@@ -93,12 +74,12 @@ warn_return_any = true
 warn_unreachable = true
 implicit_reexport = false
 strict_equality = true
+plugins = ["pydantic.mypy"]
+files = ["qldebugger/**/*.py", "tests/**/*.py"]
 
 [tool.pytest.ini_options]
 addopts = "--strict-config --cov-report=term-missing --no-cov-on-fail --cov=qldebugger"
-testpaths = [
-  "tests",
-]
+testpaths = ["tests"]
 
 [tool.coverage.run]
 branch = true
