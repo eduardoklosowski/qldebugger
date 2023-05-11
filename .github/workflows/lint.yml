@@ -41,7 +41,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.setup-python.outputs.cache-hit != 'true'
-        run: poetry install
+        run: poetry install --only=main,type,dev
 
       - name: Check poetry
         run: make lint-poetry

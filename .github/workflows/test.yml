@@ -41,7 +41,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.setup-python.outputs.cache-hit != 'true'
-        run: poetry install
+        run: poetry install --only=main,dev
 
       - name: Check pytest
         run: make test-pytest

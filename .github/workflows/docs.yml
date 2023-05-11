@@ -38,7 +38,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.setup-python.outputs.cache-hit != 'true'
-        run: poetry install
+        run: poetry install --only=docs
 
       - name: Check build
         run: make docs-build
