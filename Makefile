@@ -19,13 +19,14 @@ build:
 fmt:
 	poetry run isort --only-modified $(srcdir) $(testsdir)
 	poetry run autopep8 --in-place $(srcdir) $(testsdir)
+	poetry run ruff --fix $(srcdir) $(testsdir)
 
 
 # Lint
 
-.PHONY: lint lint-poetry lint-isort lint-pycodestyle lint-autopep8 lint-flake8 lint-mypy lint-bandit
+.PHONY: lint lint-poetry lint-isort lint-pycodestyle lint-autopep8 lint-flake8 lint-ruff lint-mypy lint-bandit
 
-lint: lint-poetry lint-isort lint-pycodestyle lint-autopep8 lint-flake8 lint-mypy lint-bandit
+lint: lint-poetry lint-isort lint-pycodestyle lint-autopep8 lint-flake8 lint-ruff lint-mypy lint-bandit
 
 lint-poetry:
 	poetry check
@@ -41,6 +42,9 @@ lint-autopep8:
 
 lint-flake8:
 	poetry run flake8 --show-source $(srcdir) $(testsdir)
+
+lint-ruff:
+	poetry run ruff check --show-source $(srcdir) $(testsdir)
 
 lint-mypy:
 	poetry run mypy --show-error-context --pretty $(srcdir) $(testsdir)
@@ -82,7 +86,7 @@ clean-build:
 clean-cache:
 	find $(srcdir) $(testsdir) -name '__pycache__' -exec rm -rf {} +
 	find $(srcdir) $(testsdir) -type d -empty -delete
-	rm -rf .mypy_cache .pytest_cache .coverage
+	rm -rf .ruff_cache .mypy_cache .pytest_cache .coverage
 
 clean-docs:
 	rm -rf docs-site
