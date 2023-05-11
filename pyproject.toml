@@ -35,6 +35,7 @@ boto3-stubs = {version = "^1.24", extras = ["sqs", "sts"]}
 
 [tool.poetry.group.dev.dependencies]
 isort = "^5.10"
+pycodestyle = "^2.9"
 autopep8 = "^1.7"
 flake8 = "^5.0"
 mypy = "^0.971"

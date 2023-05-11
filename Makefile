@@ -23,9 +23,9 @@ fmt:
 
 # Lint
 
-.PHONY: lint lint-poetry lint-isort lint-autopep8 lint-flake8 lint-mypy lint-bandit
+.PHONY: lint lint-poetry lint-isort lint-pycodestyle lint-autopep8 lint-flake8 lint-mypy lint-bandit
 
-lint: lint-poetry lint-isort lint-autopep8 lint-flake8 lint-mypy lint-bandit
+lint: lint-poetry lint-isort lint-pycodestyle lint-autopep8 lint-flake8 lint-mypy lint-bandit
 
 lint-poetry:
 	poetry check
@@ -33,8 +33,11 @@ lint-poetry:
 lint-isort:
 	poetry run isort --check --diff $(srcdir) $(testsdir)
 
+lint-pycodestyle:
+	poetry run pycodestyle --show-source $(srcdir) $(testsdir)
+
 lint-autopep8:
-	poetry run autopep8 --diff $(srcdir) $(testsdir)
+	poetry run autopep8 --diff --exit-code $(srcdir) $(testsdir)
 
 lint-flake8:
 	poetry run flake8 --show-source $(srcdir) $(testsdir)
