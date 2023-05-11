@@ -24,7 +24,7 @@ jobs:
         run: pipx install poetry
 
       - name: Generate datefile
-        run: date +%U > datefile
+        run: echo "docs-$(date +%U)" > datefile
 
       - name: Setup python
         id: setup-python
@@ -38,7 +38,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.setup-python.outputs.cache-hit != 'true'
-        run: poetry install
+        run: poetry install --only=docs
 
       - name: Check build
         run: make docs-build

@@ -9,7 +9,7 @@ build:
       - curl -sSL https://install.python-poetry.org | python3 -
       - $HOME/.local/bin/poetry config virtualenvs.create false
     pre_install:
-      - $HOME/.local/bin/poetry export --dev -o requirements.txt
+      - $HOME/.local/bin/poetry export --only=docs -o requirements.txt
 
 python:
   install:
