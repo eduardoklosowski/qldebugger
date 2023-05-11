@@ -49,6 +49,9 @@ jobs:
       - name: Check isort
         run: make lint-isort
 
+      - name: Check pycodestyle
+        run: make lint-pycodestyle
+
       - name: Check autopep8
         run: make lint-autopep8
 
