@@ -1,7 +1,7 @@
 import logging
 from typing import TYPE_CHECKING
 
-from ..aws import get_client
+from qldebugger.aws import get_client
 
 if TYPE_CHECKING:
     from mypy_boto3_sqs.type_defs import ReceiveMessageResultTypeDef
