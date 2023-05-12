@@ -106,7 +106,7 @@ class TestRunLambda:
 
         def lambda_function(event: 'ReceiveMessageResultTypeDef', context: None) -> None:
             import boto3
-            boto3.client(  # type: ignore
+            boto3.client(  # type: ignore[call-overload]
                 service_name=service_name,
                 aws_access_key_id=aws_access_key_id,
                 aws_secret_access_key=aws_secret_access_key,
