@@ -51,9 +51,9 @@ class TestConfigLambda:
     def test_hander_should_raise_erro_on_receive_non_str(self) -> None:
         handler_name = randint(0, 99)
 
+        args = self.DEFAULT_ARGS.copy()
+        args['handler'] = handler_name
         with pytest.raises(ValidationError) as exc_info:
-            args = self.DEFAULT_ARGS.copy()
-            args['handler'] = handler_name
             ConfigLambda(**args)
 
         assert {
@@ -65,9 +65,9 @@ class TestConfigLambda:
     def test_handler_should_have_a_module_and_function_name(self) -> None:
         handler = randstr()
 
+        args = self.DEFAULT_ARGS.copy()
+        args['handler'] = handler
         with pytest.raises(ValidationError) as exc_info:
-            args = self.DEFAULT_ARGS.copy()
-            args['handler'] = handler
             ConfigLambda(**args)
 
         assert {

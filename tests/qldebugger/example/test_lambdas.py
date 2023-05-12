@@ -27,7 +27,5 @@ class TestExecFail:
     def test_run(self) -> None:
         event: Any = {}
 
-        with pytest.raises(Exception) as exc_info:
+        with pytest.raises(Exception, match='Lambda execution fail'):
             exec_fail(event, None)
-
-        assert exc_info.value.args[0] == 'Lambda execution fail'
