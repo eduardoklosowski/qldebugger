@@ -14,12 +14,9 @@ build:
 
 # Format
 
-.PHONY: fmt fmt-isort fmt-autopep8 fmt-ruff
+.PHONY: fmt fmt-autopep8 fmt-ruff
 
-fmt: fmt-isort fmt-autopep8 fmt-ruff
-
-fmt-isort:
-	poetry run isort --only-modified $(srcdir) $(testsdir)
+fmt: fmt-autopep8 fmt-ruff
 
 fmt-autopep8:
 	poetry run autopep8 --in-place $(srcdir) $(testsdir)
@@ -30,15 +27,12 @@ fmt-ruff:
 
 # Lint
 
-.PHONY: lint lint-poetry lint-isort lint-pycodestyle lint-autopep8 lint-flake8 lint-ruff lint-mypy lint-bandit
+.PHONY: lint lint-poetry lint-pycodestyle lint-autopep8 lint-flake8 lint-ruff lint-mypy lint-bandit
 
-lint: lint-poetry lint-isort lint-pycodestyle lint-autopep8 lint-flake8 lint-ruff lint-mypy lint-bandit
+lint: lint-poetry lint-pycodestyle lint-autopep8 lint-flake8 lint-ruff lint-mypy lint-bandit
 
 lint-poetry:
 	poetry check
-
-lint-isort:
-	poetry run isort --check --diff $(srcdir) $(testsdir)
 
 lint-pycodestyle:
 	poetry run pycodestyle --show-source $(srcdir) $(testsdir)
