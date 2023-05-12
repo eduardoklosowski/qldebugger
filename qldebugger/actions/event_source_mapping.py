@@ -1,8 +1,9 @@
 import logging
 from typing import TYPE_CHECKING
 
-from ..aws import get_client
-from ..config import get_config
+from qldebugger.aws import get_client
+from qldebugger.config import get_config
+
 from .lambda_ import run_lambda
 from .message import delete_messages, receive_message
 

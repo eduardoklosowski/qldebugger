@@ -1,7 +1,7 @@
 import logging
 
-from ..aws import get_client
-from ..config import get_config
+from qldebugger.aws import get_client
+from qldebugger.config import get_config
 
 logger = logging.getLogger(__name__)
 

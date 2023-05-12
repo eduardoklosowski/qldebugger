@@ -5,8 +5,7 @@ from typing import TYPE_CHECKING, Any, Callable
 from unittest.mock import patch
 
 from qldebugger.aws import inject_aws_config_in_client
-
-from ..config import get_config
+from qldebugger.config import get_config
 
 if TYPE_CHECKING:
     from aws_lambda_typing.events import SQSEvent
