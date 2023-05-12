@@ -14,7 +14,7 @@ class TestConfigAWS:
     def test_all_arguments_should_be_optional_and_none_default(self) -> None:
         returned = ConfigAWS()
 
-        for k, v in returned.dict().items():
+        for v in returned.dict().values():
             assert v is None
 
 
