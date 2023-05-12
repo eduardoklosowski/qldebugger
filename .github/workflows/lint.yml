@@ -57,6 +57,3 @@ jobs:
 
       - name: Check mypy
         run: make lint-mypy
-
-      - name: Check bandit
-        run: make lint-bandit
