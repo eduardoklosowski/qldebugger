@@ -22,10 +22,8 @@ class TestLoadConfig:
 class TestGetConfig:
     @patch('qldebugger.config._current_config', None)
     def test_get_config_without_load_first(self) -> None:
-        with pytest.raises(RuntimeError) as exc_info:
+        with pytest.raises(RuntimeError, match='Configuration file is not loaded yet'):
             get_config()
-
-        assert exc_info.value.args == ('Configuration file is not loaded yet',)
 
     @patch('qldebugger.config._current_config')
     def test_get_config_after_load(self, mock_current_config: Mock) -> None:

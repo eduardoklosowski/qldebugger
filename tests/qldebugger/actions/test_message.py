@@ -65,7 +65,7 @@ class TestReceiveMessage:
         mock_get_client.return_value.get_queue_url.return_value = {'QueueUrl': queue_url}
         mock_get_client.return_value.receive_message.return_value = {}
 
-        with pytest.raises(RuntimeWarning) as exc_info:
+        with pytest.raises(RuntimeWarning, match='No messages received'):
             receive_message(
                 queue_name=queue_name,
                 batch_size=batch_size,
@@ -79,7 +79,6 @@ class TestReceiveMessage:
             MaxNumberOfMessages=batch_size,
             WaitTimeSeconds=maximum_batching_window,
         )
-        assert exc_info.value.args[0] == 'No messages received'
 
 
 class TestDeleteMessages:

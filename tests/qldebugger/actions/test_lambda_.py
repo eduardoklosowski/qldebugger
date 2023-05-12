@@ -60,7 +60,7 @@ class TestRunLambda:
 
         mock_get_lambda_function.return_value.side_effect = error
 
-        with pytest.raises(Exception) as exc_info:
+        with pytest.raises(Exception, match=error.args[0]) as exc_info:
             run_lambda(lambda_name=lambda_name, event=event)
 
         mock_get_lambda_function.assert_called_once_with(lambda_name=lambda_name)
