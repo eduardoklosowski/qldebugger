@@ -71,7 +71,7 @@ aggressive = 3
 target-version = "py38"
 line-length = 119
 select = ["ALL"]
-ignore = ["D", "ANN101", "ANN102", "ANN401", "FBT", "EM", "ARG", "PLC0414", "PLR0913", "PLR2004", "PLW0603", "TRY"]
+ignore = ["D", "ANN101", "ANN102", "ANN401", "FBT", "EM", "ARG", "PLR0913", "TRY"]
 
 [tool.ruff.per-file-ignores]
 "qldebugger/example/*.py" = ["T20"]

@@ -93,7 +93,7 @@ class TestConfigEventSourceMapping:
     def test_default_values(self) -> None:
         returned = ConfigEventSourceMapping(**self.DEFAULT_ARGS)
 
-        assert returned.batch_size == 10
+        assert returned.batch_size == 10  # noqa: PLR2004
         assert returned.maximum_batching_window == 0
 
 
