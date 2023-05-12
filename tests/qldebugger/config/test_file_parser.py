@@ -57,7 +57,7 @@ class TestConfigLambda:
             ConfigLambda(**args)
 
         assert {
-            'type': 'value_error',
+            'type': 'type_error',
             'loc': ('handler',),
             'msg': 'should be a str',
         } in exc_info.value.errors()

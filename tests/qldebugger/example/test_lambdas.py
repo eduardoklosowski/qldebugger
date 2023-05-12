@@ -4,7 +4,7 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from qldebugger.example.lambdas import exec_fail, print_messages
+from qldebugger.example.lambdas import LambdaCustomError, exec_fail, print_messages
 from tests.utils import randstr
 
 
@@ -27,5 +27,5 @@ class TestExecFail:
     def test_run(self) -> None:
         event: Any = {}
 
-        with pytest.raises(Exception, match='Lambda execution fail'):
+        with pytest.raises(LambdaCustomError, match='Lambda execution fail'):
             exec_fail(event, None)
