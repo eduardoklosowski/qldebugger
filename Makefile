@@ -17,22 +17,18 @@ build:
 .PHONY: fmt
 
 fmt:
-	poetry run isort --only-modified $(srcdir) $(testsdir)
 	poetry run autopep8 --in-place $(srcdir) $(testsdir)
 	poetry run ruff --fix $(srcdir) $(testsdir)
 
 
 # Lint
 
-.PHONY: lint lint-poetry lint-isort lint-pycodestyle lint-autopep8 lint-flake8 lint-ruff lint-mypy lint-bandit
+.PHONY: lint lint-poetry lint-pycodestyle lint-autopep8 lint-flake8 lint-ruff lint-mypy lint-bandit
 
-lint: lint-poetry lint-isort lint-pycodestyle lint-autopep8 lint-flake8 lint-ruff lint-mypy lint-bandit
+lint: lint-poetry lint-pycodestyle lint-autopep8 lint-flake8 lint-ruff lint-mypy lint-bandit
 
 lint-poetry:
 	poetry check
-
-lint-isort:
-	poetry run isort --check --diff $(srcdir) $(testsdir)
 
 lint-pycodestyle:
 	poetry run pycodestyle --show-source $(srcdir) $(testsdir)

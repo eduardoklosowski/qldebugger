@@ -46,9 +46,6 @@ jobs:
       - name: Check poetry
         run: make lint-poetry
 
-      - name: Check isort
-        run: make lint-isort
-
       - name: Check pycodestyle
         run: make lint-pycodestyle
 
