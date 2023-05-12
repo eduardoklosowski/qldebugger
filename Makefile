@@ -27,9 +27,9 @@ fmt-ruff:
 
 # Lint
 
-.PHONY: lint lint-poetry lint-pycodestyle lint-autopep8 lint-ruff lint-mypy lint-bandit
+.PHONY: lint lint-poetry lint-pycodestyle lint-autopep8 lint-ruff lint-mypy
 
-lint: lint-poetry lint-pycodestyle lint-autopep8 lint-ruff lint-mypy lint-bandit
+lint: lint-poetry lint-pycodestyle lint-autopep8 lint-ruff lint-mypy
 
 lint-poetry:
 	poetry check
@@ -45,9 +45,6 @@ lint-ruff:
 
 lint-mypy:
 	poetry run mypy --show-error-context --pretty $(srcdir) $(testsdir)
-
-lint-bandit:
-	poetry run bandit --silent --recursive $(srcdir)
 
 
 # Tests
