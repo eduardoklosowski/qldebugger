@@ -12,7 +12,7 @@ _current_config: Optional[Config] = None
 def load_config(filename: Union[str, Path], /) -> Config:
     logger.debug('Loading %r config...', str(filename))
     global _current_config
-    with open(filename, 'rb') as fp:
+    with Path(filename).open('rb') as fp:
         _current_config = Config.from_toml(fp)
     return _current_config
 
