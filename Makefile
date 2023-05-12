@@ -27,9 +27,9 @@ fmt-ruff:
 
 # Lint
 
-.PHONY: lint lint-poetry lint-pycodestyle lint-autopep8 lint-flake8 lint-ruff lint-mypy lint-bandit
+.PHONY: lint lint-poetry lint-pycodestyle lint-autopep8 lint-ruff lint-mypy lint-bandit
 
-lint: lint-poetry lint-pycodestyle lint-autopep8 lint-flake8 lint-ruff lint-mypy lint-bandit
+lint: lint-poetry lint-pycodestyle lint-autopep8 lint-ruff lint-mypy lint-bandit
 
 lint-poetry:
 	poetry check
@@ -39,9 +39,6 @@ lint-pycodestyle:
 
 lint-autopep8:
 	poetry run autopep8 --diff --exit-code $(srcdir) $(testsdir)
-
-lint-flake8:
-	poetry run flake8 --show-source $(srcdir) $(testsdir)
 
 lint-ruff:
 	poetry run ruff check --show-source $(srcdir) $(testsdir)
