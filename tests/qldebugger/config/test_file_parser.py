@@ -58,7 +58,7 @@ class TestConfigLambda:
 
         assert {
             'type': 'value_error',
-            'loc': tuple(['handler']),
+            'loc': ('handler',),
             'msg': 'should be a str',
         } in exc_info.value.errors()
 
@@ -72,7 +72,7 @@ class TestConfigLambda:
 
         assert {
             'type': 'value_error',
-            'loc': tuple(['handler']),
+            'loc': ('handler',),
             'msg': 'should have a module and function names',
         } in exc_info.value.errors()
 
@@ -108,7 +108,7 @@ class TestConfig:
         for field in required_fields:
             assert {
                 'type': 'value_error.missing',
-                'loc': tuple([field]),
+                'loc': (field,),
                 'msg': 'field required',
             } in exc_info.value.errors()
 
