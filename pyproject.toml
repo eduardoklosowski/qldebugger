@@ -40,7 +40,7 @@ ruff = "0.0.265"
 mypy = "^0.971"
 pytest = "^7.1"
 pytest-cov = "^3.0"
-pytest-xdist = "^2.5"
+pytest-xdist = ">=2.5,<4.0"
 moto = {version = "^4.0", extras = ["server"]}
 
 [tool.poetry.group.docs]
