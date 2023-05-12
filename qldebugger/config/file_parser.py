@@ -29,7 +29,7 @@ class ConfigLambda(BaseModel):
     @validator('handler', pre=True)
     def _split_handler(cls, v: Any) -> Tuple[str, str]:
         if not isinstance(v, str):
-            raise ValueError('should be a str')
+            raise TypeError('should be a str')
         if '.' not in v:
             raise ValueError('should have a module and function names')
         module, function = v.rsplit('.', maxsplit=1)
