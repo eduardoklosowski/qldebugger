@@ -10,6 +10,6 @@ def create_queues() -> None:
     client = get_client('sqs')
     queues = get_config().queues
 
-    for queue_name in queues.keys():
+    for queue_name in queues:
         logger.info('Creating %r queue...', queue_name)
         client.create_queue(QueueName=queue_name)
