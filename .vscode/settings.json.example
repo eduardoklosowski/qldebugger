@@ -1,6 +1,5 @@
 {
     "python.formatting.provider": "autopep8",
-    "python.linting.flake8Enabled": true,
     "ruff.importStrategy": "fromEnvironment",
     "python.linting.mypyEnabled": true,
     "python.linting.banditEnabled": true,
