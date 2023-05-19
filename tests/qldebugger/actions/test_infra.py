@@ -6,7 +6,7 @@ from qldebugger.config.file_parser import ConfigQueue
 from tests.utils import randstr
 
 
-class TestInfra:
+class TestCreateQueues:
     @patch('qldebugger.actions.infra.get_client')
     @patch('qldebugger.actions.infra.get_config')
     def test_run(self, mock_get_config: Mock, mock_get_client: Mock) -> None:
