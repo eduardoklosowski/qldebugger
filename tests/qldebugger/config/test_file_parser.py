@@ -6,7 +6,14 @@ from unittest.mock import Mock, patch
 import pytest
 from pydantic import ValidationError
 
-from qldebugger.config.file_parser import Config, ConfigAWS, ConfigEventSourceMapping, ConfigLambda, ConfigQueue
+from qldebugger.config.file_parser import (
+    Config,
+    ConfigAWS,
+    ConfigEventSourceMapping,
+    ConfigLambda,
+    ConfigQueue,
+    NameHandlerTuple,
+)
 from tests.utils import randstr
 
 
@@ -25,6 +32,16 @@ class TestConfigQueue:
         assert returned.dict() == {}
 
 
+class TestNameHandlerTuple:
+    def test_tuple(self) -> None:
+        module = randstr()
+        function = randstr()
+
+        returned = NameHandlerTuple(module, function)
+
+        assert returned == (module, function)
+
+
 class TestConfigLambda:
     DEFAULT_ARGS: Dict[str, Any] = {
         'handler': f'{randstr()}.{randstr()}',
@@ -33,7 +50,10 @@ class TestConfigLambda:
     def test_default_values(self) -> None:
         returned = ConfigLambda(**self.DEFAULT_ARGS)
 
-        assert returned.environment == {}
+        assert returned.dict() == {
+            'handler': tuple(self.DEFAULT_ARGS['handler'].rsplit('.', maxsplit=1)),
+            'environment': {},
+        }
 
     def test_handler_argument(self) -> None:
         module_name = '.'.join(randstr() for _ in range(randint(3, 10)))
@@ -93,8 +113,12 @@ class TestConfigEventSourceMapping:
     def test_default_values(self) -> None:
         returned = ConfigEventSourceMapping(**self.DEFAULT_ARGS)
 
-        assert returned.batch_size == 10
-        assert returned.maximum_batching_window == 0
+        assert returned.dict() == {
+            'queue': self.DEFAULT_ARGS['queue'],
+            'function_name': self.DEFAULT_ARGS['function_name'],
+            'batch_size': 10,
+            'maximum_batching_window': 0,
+        }
 
 
 class TestConfig:
