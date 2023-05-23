@@ -56,15 +56,15 @@ test-pytest:
 	poetry run pytest --numprocesses=auto $(testsdir)
 
 
-# Doc
+# Docs
 
-.PHONY: doc-serve doc-build
+.PHONY: docs-build docs-serve
 
-doc-serve:
-	poetry run mkdocs serve
-
-doc-build:
+docs-build:
 	poetry run mkdocs build
+
+docs-serve:
+	poetry run mkdocs serve
 
 
 # Clean
