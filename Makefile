@@ -7,25 +7,24 @@ testsdir = tests
 # Build
 
 .PHONY: build
+
 build:
 	poetry build
 
 
 # Format
 
-.PHONY: fmt fmt-isort fmt-autopep8
-fmt: fmt-isort fmt-autopep8
+.PHONY: fmt
 
-fmt-isort:
+fmt:
 	poetry run isort --only-modified $(srcdir) $(testsdir)
-
-fmt-autopep8:
 	poetry run autopep8 --in-place $(srcdir) $(testsdir)
 
 
 # Lint
 
 .PHONY: lint lint-poetry lint-isort lint-autopep8 lint-flake8 lint-mypy lint-bandit
+
 lint: lint-poetry lint-isort lint-autopep8 lint-flake8 lint-mypy lint-bandit
 
 lint-poetry:
@@ -50,6 +49,7 @@ lint-bandit:
 # Tests
 
 .PHONY: test test-pytest
+
 test: test-pytest
 
 test-pytest:
@@ -69,15 +69,28 @@ docs-serve:
 
 # Clean
 
-.PHONY: clean
-clean:
+.PHONY: clean clean-build clean-cache clean-docs clean-lock
+
+clean: clean-build clean-cache clean-docs
+
+clean-build:
+	rm -rf dist
+
+clean-cache:
 	find $(srcdir) $(testsdir) -name '__pycache__' -exec rm -rf {} +
 	find $(srcdir) $(testsdir) -type d -empty -delete
-	rm -rf poetry.lock dist .mypy_cache .pytest_cache .coverage docs-site
+	rm -rf .mypy_cache .pytest_cache .coverage
+
+clean-docs:
+	rm -rf docs-site
+
+clean-lock:
+	rm -rf poetry.lock
 
 
 # Misc
 
 .PHONY: run-aws-mock
+
 run-aws-mock:
 	poetry run moto_server -p 4566
