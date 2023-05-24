@@ -12,9 +12,9 @@ logger = logging.getLogger(__name__)
 
 def send_message(*, queue_name: str, message: str) -> None:
     logger.info('Sending message to %r queue...', queue_name)
-    client = get_client('sqs')
-    queue_url = client.get_queue_url(QueueName=queue_name)['QueueUrl']
-    client.send_message(QueueUrl=queue_url, MessageBody=message)
+    sqs = get_client('sqs')
+    queue_url = sqs.get_queue_url(QueueName=queue_name)['QueueUrl']
+    sqs.send_message(QueueUrl=queue_url, MessageBody=message)
 
 
 def receive_message(
@@ -24,9 +24,9 @@ def receive_message(
     maximum_batching_window: int,
 ) -> 'ReceiveMessageResultTypeDef':
     logger.debug('Receiving messages from %r queue...', queue_name)
-    client = get_client('sqs')
-    queue_url = client.get_queue_url(QueueName=queue_name)['QueueUrl']
-    messages = client.receive_message(
+    sqs = get_client('sqs')
+    queue_url = sqs.get_queue_url(QueueName=queue_name)['QueueUrl']
+    messages = sqs.receive_message(
         QueueUrl=queue_url,
         MaxNumberOfMessages=batch_size,
         WaitTimeSeconds=maximum_batching_window,
@@ -40,9 +40,9 @@ def receive_message(
 
 def delete_messages(*, queue_name: str, messages: 'ReceiveMessageResultTypeDef') -> None:
     logger.debug('Deleting messages of %r queue...', queue_name)
-    client = get_client('sqs')
-    queue_url = client.get_queue_url(QueueName=queue_name)['QueueUrl']
-    client.delete_message_batch(
+    sqs = get_client('sqs')
+    queue_url = sqs.get_queue_url(QueueName=queue_name)['QueueUrl']
+    sqs.delete_message_batch(
         QueueUrl=queue_url,
         Entries=[
             {
