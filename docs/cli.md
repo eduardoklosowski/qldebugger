@@ -32,6 +32,10 @@ Esse comando lê todas os tópicos SNS presentes na seção `topics` do arquivo 
 
 Esse comando lê todas as filas Amazon SQS presentes na seção `queues` do arquivo de configuração e envia o comando para criá-las no serviço configurado da AWS.
 
+### `infra subscribe-topics`
+
+Esse comando remove todas as inscrições dos tópicos e as cria conforme definido no parâmetro `subscribers` dentro dos itens da seção `topics` do arquivo de configuração.
+
 ### `msg send <queue_name> <message>`
 
 Esse comando recebe o nome de uma fila Amazon SQS e uma mensagem, e executa o envio dessa mensagem para a fila no serviço configurado da AWS.

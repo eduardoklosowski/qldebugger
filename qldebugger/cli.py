@@ -72,6 +72,12 @@ def infra_create_queues() -> None:
     actions.infra.create_queues()
 
 
+@infra.command('subscribe-topics')
+def infra_subscribe_topics() -> None:
+    load_config(CONFIG_FILENAME)
+    actions.infra.subscribe_topics()
+
+
 # Msg
 
 @cli.group()
