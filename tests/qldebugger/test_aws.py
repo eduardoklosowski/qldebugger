@@ -1,8 +1,9 @@
+from random import randint
 from unittest.mock import Mock, patch
 
 import pytest
 
-from qldebugger.aws import get_client, inject_aws_config_in_client
+from qldebugger.aws import get_account_id, get_client, inject_aws_config_in_client
 from qldebugger.config.file_parser import ConfigAWS
 from tests.utils import randstr
 
@@ -80,6 +81,22 @@ class TestGetClient:
         assert mock_boto3.Session.call_count == 2
         assert mock_boto3.Session.return_value.client.call_count == 2
         assert returned3 is not returned1  # type: ignore[comparison-overlap]
+
+
+class TestGetAccountId:
+    @patch('qldebugger.aws.get_client')
+    def test_run(self, mock_get_client: Mock) -> None:
+        account_id = f'{randint(0, 999999999999):012}'
+
+        mock_get_client.return_value.get_caller_identity.return_value = {
+            'Account': account_id,
+        }
+
+        returned = get_account_id()
+
+        mock_get_client.assert_called_once_with('sts')
+        mock_get_client.return_value.get_caller_identity.assert_called_once_with()
+        assert returned == account_id
 
 
 class TestInjectAwsConfigInClient:
