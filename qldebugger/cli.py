@@ -60,6 +60,12 @@ def infra() -> None:
     ...
 
 
+@infra.command('create-topics')
+def infra_create_topics() -> None:
+    load_config(CONFIG_FILENAME)
+    actions.infra.create_topics()
+
+
 @infra.command('create-queues')
 def infra_create_queues() -> None:
     load_config(CONFIG_FILENAME)

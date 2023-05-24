@@ -1,9 +1,25 @@
 from random import randint
 from unittest.mock import Mock, patch
 
-from qldebugger.actions.infra import create_queues
-from qldebugger.config.file_parser import ConfigQueue
+from qldebugger.actions.infra import create_queues, create_topics
+from qldebugger.config.file_parser import ConfigQueue, ConfigTopic
 from tests.utils import randstr
+
+
+class TestCreateTopics:
+    @patch('qldebugger.actions.infra.get_client')
+    @patch('qldebugger.actions.infra.get_config')
+    def test_run(self, mock_get_config: Mock, mock_get_client: Mock) -> None:
+        topics_names = [randstr() for _ in range(randint(2, 5))]
+
+        mock_get_config.return_value.topics = {topic_name: ConfigTopic() for topic_name in topics_names}
+
+        create_topics()
+
+        mock_get_client.assert_called_once_with('sns')
+        assert mock_get_client.return_value.create_topic.call_count == len(topics_names)
+        for topic_name in topics_names:
+            mock_get_client.return_value.create_topic.assert_any_call(Name=topic_name)
 
 
 class TestCreateQueues:
