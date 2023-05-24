@@ -1,7 +1,7 @@
 import logging
 from typing import TYPE_CHECKING
 
-from qldebugger.aws import get_client
+from qldebugger.aws import get_account_id, get_client
 from qldebugger.config import get_config
 
 from .lambda_ import run_lambda
@@ -15,12 +15,10 @@ logger = logging.getLogger(__name__)
 
 
 def receive_messages_and_run_lambda(*, event_source_mapping_name: str) -> None:
-    sts = get_client('sts')
     sqs = get_client('sqs')
     event_source_mapping = get_config().event_source_mapping[event_source_mapping_name]
 
-    account_id = sts.get_caller_identity()['Account']
-    queue_arn = f'arn:{sqs.meta.partition}:sqs:{sqs.meta.region_name}:{account_id}:{event_source_mapping.queue}'
+    queue_arn = f'arn:{sqs.meta.partition}:sqs:{sqs.meta.region_name}:{get_account_id()}:{event_source_mapping.queue}'
 
     logger.debug('Execute %r event source mapping...', event_source_mapping_name)
     messages = receive_message(
