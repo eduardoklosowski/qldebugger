@@ -26,7 +26,7 @@ Esse comando recebe o nome do um `event_source_mapping` configurado na seção d
 
 ### `infra create-queues`
 
-Esse comando lê todas as filas Amazon SQS presentes na seção `queues` do arquivo de configuração e envio o comando para criá-la no serviço configurado da AWS.
+Esse comando lê todas as filas Amazon SQS presentes na seção `queues` do arquivo de configuração e envia o comando para criá-las no serviço configurado da AWS.
 
 ### `msg send <queue_name> <message>`
 
