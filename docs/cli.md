@@ -36,6 +36,10 @@ Esse comando lê todas os tópicos SNS presentes na seção `topics` do arquivo 
 
 Esse comando lê todas as filas Amazon SQS presentes na seção `queues` do arquivo de configuração e envia o comando para criá-las no serviço configurado da AWS.
 
+### `infra create-all`
+
+Esse comando lê todos os segredos, tópicos, filas e inscrições do arquivo de configuração e envia o comando para criá-los ou atualizá-los no serviço configurado da AWS.
+
 ### `infra subscribe-topics`
 
 Esse comando remove todas as inscrições dos tópicos e as cria conforme definido no parâmetro `subscribers` dentro dos itens da seção `topics` do arquivo de configuração.
