@@ -1,9 +1,34 @@
 import logging
 
+from botocore.exceptions import ClientError
+
 from qldebugger.aws import get_account_id, get_client
 from qldebugger.config import get_config
+from qldebugger.config.file_parser import ConfigSecretString
 
 logger = logging.getLogger(__name__)
+
+
+def create_secrets() -> None:
+    secretsmanager = get_client('secretsmanager')
+    secrets = get_config().secrets
+
+    for name, value in secrets.items():
+        try:
+            secretsmanager.describe_secret(SecretId=name)
+            if isinstance(value, ConfigSecretString):
+                logger.info('Updating %r string secret...', name)
+                secretsmanager.put_secret_value(SecretId=name, SecretString=value.get_value())
+            else:
+                logger.info('Updating %r binary secret...', name)
+                secretsmanager.put_secret_value(SecretId=name, SecretBinary=value.get_value())
+        except ClientError:
+            if isinstance(value, ConfigSecretString):
+                logger.info('Creating %r string secret...', name)
+                secretsmanager.create_secret(Name=name, SecretString=value.get_value())
+            else:
+                logger.info('Creating %r binary secret...', name)
+                secretsmanager.create_secret(Name=name, SecretBinary=value.get_value())
 
 
 def create_topics() -> None:

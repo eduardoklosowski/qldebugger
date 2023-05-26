@@ -24,6 +24,10 @@ Esse comando cria um exemplo do arquivo de configuração (`qldebugger.toml`) no
 
 Esse comando recebe o nome do um `event_source_mapping` configurado na seção de mesmo nome do arquivo de configuração, recebe mensagens da fila Amazon SQS configurada no parâmetro `queue` e executa o AWS Lambda nomeado no parâmetro `function_name`, exibindo sua saída no terminal.
 
+### `infra create-secrets`
+
+Esse comando lê todas os segredos do SecretsManager presentes na seção `secrets` do arquivo de configuração e envia o comando para criá-los ou atualizá-los no serviço configurado da AWS.
+
 ### `infra create-topics`
 
 Esse comando lê todas os tópicos SNS presentes na seção `topics` do arquivo de configuração e envia o comando para criá-los no serviço configurado da AWS.
