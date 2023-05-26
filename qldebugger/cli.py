@@ -1,10 +1,15 @@
+import json
 import logging
 from pathlib import Path
+from typing import TYPE_CHECKING, Mapping
 
 import click
 
 from . import actions
 from .config import load_config
+
+if TYPE_CHECKING:
+    from mypy_boto3_sns.type_defs import MessageAttributeValueTypeDef
 
 CONFIG_FILENAME = Path('qldebugger.toml')
 
@@ -83,6 +88,15 @@ def infra_subscribe_topics() -> None:
 @cli.group()
 def msg() -> None:
     ...
+
+
+@msg.command('publish')
+@click.argument('topic_name')
+@click.argument('message')
+@click.argument('attributes', default='{}', type=json.loads)
+def msg_publish(topic_name: str, message: str, attributes: Mapping[str, 'MessageAttributeValueTypeDef']) -> None:
+    load_config(CONFIG_FILENAME)
+    actions.message.publish_message(topic_name=topic_name, message=message, attributes=attributes)
 
 
 @msg.command('send')

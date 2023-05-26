@@ -1,14 +1,61 @@
 from random import randint
-from typing import TYPE_CHECKING, Any, cast
+from typing import TYPE_CHECKING, Any, Mapping, cast
 from unittest.mock import Mock, patch
 
 import pytest
 
-from qldebugger.actions.message import delete_messages, receive_message, send_message
+from qldebugger.actions.message import delete_messages, publish_message, receive_message, send_message
 from tests.utils import randstr
 
 if TYPE_CHECKING:
+    from mypy_boto3_sns.type_defs import MessageAttributeValueTypeDef
     from mypy_boto3_sqs.type_defs import ReceiveMessageResultTypeDef
+
+
+class TestPublishMessage:
+    @patch('qldebugger.actions.message.get_account_id')
+    @patch('qldebugger.actions.message.get_client')
+    def test_without_attributes(self, mock_get_client: Mock, mock_get_account_id: Mock) -> None:
+        account_id = f'{randint(0, 999999999999):012}'
+        region = randstr()
+        topic_name = randstr()
+        message = randstr()
+
+        mock_get_account_id.return_value = account_id
+        mock_get_client.return_value.meta.region_name = region
+
+        publish_message(topic_name=topic_name, message=message)
+
+        mock_get_client.assert_called_once_with('sns')
+        mock_get_client.return_value.publish(
+            TopicArn=f'arn:aws:sns:{region}:{account_id}:{topic_name}',
+            Message=message,
+            MessageAttributes={},
+        )
+
+    @patch('qldebugger.actions.message.get_account_id')
+    @patch('qldebugger.actions.message.get_client')
+    def test_with_attributes(self, mock_get_client: Mock, mock_get_account_id: Mock) -> None:
+        account_id = f'{randint(0, 999999999999):012}'
+        region = randstr()
+        topic_name = randstr()
+        message = randstr()
+        attributes = cast(
+            Mapping[str, 'MessageAttributeValueTypeDef'],
+            {randstr(): {'DataType': 'String', 'StringValue': randstr()} for _ in range(randint(2, 5))},
+        )
+
+        mock_get_account_id.return_value = account_id
+        mock_get_client.return_value.meta.region_name = region
+
+        publish_message(topic_name=topic_name, message=message, attributes=attributes)
+
+        mock_get_client.assert_called_once_with('sns')
+        mock_get_client.return_value.publish(
+            TopicArn=f'arn:aws:sns:{region}:{account_id}:{topic_name}',
+            Message=message,
+            MessageAttributes=attributes,
+        )
 
 
 class TestSendMessage:

@@ -36,6 +36,10 @@ Esse comando lê todas as filas Amazon SQS presentes na seção `queues` do arqu
 
 Esse comando remove todas as inscrições dos tópicos e as cria conforme definido no parâmetro `subscribers` dentro dos itens da seção `topics` do arquivo de configuração.
 
+### `msg publish <topic_name> <message> [<attributes>]`
+
+Esse comando recebe o nome de um tópico SNS, uma mensagem e opcionalmente seus atributos, e executa o envio dessa mensagem para o tópico no serviço configurado da AWS. Exemplo de atributos: `{"status":{"DataType":"String","StringValue":"success"}}`.
+
 ### `msg send <queue_name> <message>`
 
 Esse comando recebe o nome de uma fila Amazon SQS e uma mensagem, e executa o envio dessa mensagem para a fila no serviço configurado da AWS.
