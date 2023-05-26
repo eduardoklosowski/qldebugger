@@ -12,6 +12,8 @@ from qldebugger.config.file_parser import (
     ConfigEventSourceMapping,
     ConfigLambda,
     ConfigQueue,
+    ConfigSecretBinary,
+    ConfigSecretString,
     ConfigTopic,
     ConfigTopicSubscriber,
     NameHandlerTuple,
@@ -25,6 +27,26 @@ class TestConfigAWS:
 
         for v in returned.dict().values():
             assert v is None
+
+
+class TestConfigSecretString:
+    def test_get_value(self) -> None:
+        value = randstr()
+
+        sut = ConfigSecretString(string=value)
+        returned = sut.get_value()
+
+        assert returned == value
+
+
+class TestConfigSecretBinary:
+    def test_get_value(self) -> None:
+        value = randstr().encode()
+
+        sut = ConfigSecretBinary(binary=value)
+        returned = sut.get_value()
+
+        assert returned == value
 
 
 class TestConfigTopicSubscriber:
@@ -162,6 +184,7 @@ class TestConfig:
 
     @patch('qldebugger.config.file_parser.tomli.load')
     def test_from_toml(self, mock_load: Mock) -> None:
+        secret_name = randstr()
         topic_name = randstr()
         queue_name = randstr()
         lambda_name = randstr()
@@ -170,6 +193,9 @@ class TestConfig:
         fp = BytesIO(randstr().encode())
 
         mock_load.return_value = {
+            'secrets': {
+                secret_name: {'string': secret_name},
+            },
             'topics': {
                 topic_name: {},
             },
@@ -187,6 +213,7 @@ class TestConfig:
         returned = Config.from_toml(fp)
 
         mock_load.assert_called_once_with(fp)
+        assert returned.secrets.keys() == {secret_name}
         assert returned.topics.keys() == {topic_name}
         assert returned.queues.keys() == {queue_name}
         assert returned.lambdas.keys() == {lambda_name}

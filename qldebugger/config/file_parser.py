@@ -1,4 +1,5 @@
-from typing import Any, BinaryIO, Dict, List, NamedTuple, Optional, Tuple
+from abc import ABC, abstractmethod
+from typing import Any, BinaryIO, Dict, List, NamedTuple, Optional, Tuple, Union
 
 import tomli
 from pydantic import BaseModel, Field, validator
@@ -11,6 +12,26 @@ class ConfigAWS(BaseModel):
     session_token: Optional[str]
     region: Optional[str]
     endpoint_url: Optional[str]
+
+
+class ConfigSecret(BaseModel, ABC):
+    @abstractmethod
+    def get_value(self) -> Union[str, bytes]:
+        ...
+
+
+class ConfigSecretString(ConfigSecret):
+    string: str
+
+    def get_value(self) -> str:
+        return self.string
+
+
+class ConfigSecretBinary(ConfigSecret):
+    binary: bytes
+
+    def get_value(self) -> bytes:
+        return self.binary
 
 
 class ConfigTopicSubscriber(BaseModel):
@@ -55,6 +76,7 @@ class ConfigEventSourceMapping(BaseModel):
 
 class Config(BaseModel):
     aws: ConfigAWS = Field(default_factory=ConfigAWS)
+    secrets: Dict[str, Union[ConfigSecretString, ConfigSecretBinary]] = Field(default_factory=dict)
     topics: Dict[str, ConfigTopic] = Field(default_factory=dict)
     queues: Dict[str, ConfigQueue]
     lambdas: Dict[str, ConfigLambda]
