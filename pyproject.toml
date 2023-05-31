@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "qldebugger"
-version = "0.0.0"
+version = "0.2.0"
 description = "Utility to debug AWS lambdas with SQS messages"
 authors = ["Eduardo Klosowski <eduardo_klosowski@yahoo.com>"]
 license = "MIT"
