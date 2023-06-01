@@ -65,6 +65,12 @@ def infra() -> None:
     ...
 
 
+@infra.command('create-secrets')
+def infra_create_secrets() -> None:
+    load_config(CONFIG_FILENAME)
+    actions.infra.create_secrets()
+
+
 @infra.command('create-topics')
 def infra_create_topics() -> None:
     load_config(CONFIG_FILENAME)

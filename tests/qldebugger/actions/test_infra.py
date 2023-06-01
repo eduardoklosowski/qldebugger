@@ -1,9 +1,93 @@
 from random import randint
 from unittest.mock import Mock, patch
 
-from qldebugger.actions.infra import create_queues, create_topics, subscribe_topics
-from qldebugger.config.file_parser import ConfigQueue, ConfigTopic, ConfigTopicSubscriber
+from botocore.exceptions import ClientError
+
+from qldebugger.actions.infra import create_queues, create_secrets, create_topics, subscribe_topics
+from qldebugger.config.file_parser import (
+    ConfigQueue,
+    ConfigSecretBinary,
+    ConfigSecretString,
+    ConfigTopic,
+    ConfigTopicSubscriber,
+)
 from tests.utils import randstr
+
+
+class TestCreateSecrets:
+    @patch('qldebugger.actions.infra.get_client')
+    @patch('qldebugger.actions.infra.get_config')
+    def test_create_string_secrets(self, mock_get_config: Mock, mock_get_client: Mock) -> None:
+        secrets = {randstr(): randstr() for _ in range(randint(2, 5))}
+
+        mock_get_config.return_value.secrets = {
+            name: ConfigSecretString(string=value)
+            for name, value in secrets.items()
+        }
+        mock_get_client.return_value.describe_secret.side_effect = ClientError({}, '')
+
+        create_secrets()
+
+        mock_get_client.assert_called_once_with('secretsmanager')
+        assert mock_get_client.return_value.create_secret.call_count == len(secrets)
+        for name, value in secrets.items():
+            mock_get_client.return_value.create_secret.assert_any_call(Name=name, SecretString=value)
+        mock_get_client.return_value.put_secret_value.assert_not_called()
+
+    @patch('qldebugger.actions.infra.get_client')
+    @patch('qldebugger.actions.infra.get_config')
+    def test_create_binary_secrets(self, mock_get_config: Mock, mock_get_client: Mock) -> None:
+        secrets = {randstr(): randstr().encode() for _ in range(randint(2, 5))}
+
+        mock_get_config.return_value.secrets = {
+            name: ConfigSecretBinary(binary=value)
+            for name, value in secrets.items()
+        }
+        mock_get_client.return_value.describe_secret.side_effect = ClientError({}, '')
+
+        create_secrets()
+
+        mock_get_client.assert_called_once_with('secretsmanager')
+        assert mock_get_client.return_value.create_secret.call_count == len(secrets)
+        for name, value in secrets.items():
+            mock_get_client.return_value.create_secret.assert_any_call(Name=name, SecretBinary=value)
+        mock_get_client.return_value.put_secret_value.assert_not_called()
+
+    @patch('qldebugger.actions.infra.get_client')
+    @patch('qldebugger.actions.infra.get_config')
+    def test_update_string_secrets(self, mock_get_config: Mock, mock_get_client: Mock) -> None:
+        secrets = {randstr(): randstr() for _ in range(randint(2, 5))}
+
+        mock_get_config.return_value.secrets = {
+            name: ConfigSecretString(string=value)
+            for name, value in secrets.items()
+        }
+
+        create_secrets()
+
+        mock_get_client.assert_called_once_with('secretsmanager')
+        assert mock_get_client.return_value.put_secret_value.call_count == len(secrets)
+        for name, value in secrets.items():
+            mock_get_client.return_value.put_secret_value.assert_any_call(SecretId=name, SecretString=value)
+        mock_get_client.return_value.create_secret.assert_not_called()
+
+    @patch('qldebugger.actions.infra.get_client')
+    @patch('qldebugger.actions.infra.get_config')
+    def test_update_binary_secrets(self, mock_get_config: Mock, mock_get_client: Mock) -> None:
+        secrets = {randstr(): randstr().encode() for _ in range(randint(2, 5))}
+
+        mock_get_config.return_value.secrets = {
+            name: ConfigSecretBinary(binary=value)
+            for name, value in secrets.items()
+        }
+
+        create_secrets()
+
+        mock_get_client.assert_called_once_with('secretsmanager')
+        assert mock_get_client.return_value.put_secret_value.call_count == len(secrets)
+        for name, value in secrets.items():
+            mock_get_client.return_value.put_secret_value.assert_any_call(SecretId=name, SecretBinary=value)
+        mock_get_client.return_value.create_secret.assert_not_called()
 
 
 class TestCreateTopics:

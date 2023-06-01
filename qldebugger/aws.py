@@ -8,11 +8,16 @@ from botocore.config import Config
 from .config import get_config
 
 if TYPE_CHECKING:
+    from mypy_boto3_secretsmanager import SecretsManagerClient
     from mypy_boto3_sns import SNSClient
     from mypy_boto3_sqs import SQSClient
     from mypy_boto3_sts import STSClient
 
 logger = logging.getLogger(__name__)
+
+
+@overload
+def get_client(service_name: Literal['secretsmanager'], /) -> 'SecretsManagerClient': ...
 
 
 @overload

@@ -56,6 +56,30 @@ Nome da região da AWS que deve ser utilizada.
 
 URL do endpoint para acessar a AWS. Normalmente utilizado por mocks.
 
+## `secrets`
+
+Essa seção é opcional e descreve os segredos do SecretsManager utilizados pelo Queue Lambda Debugger. Ela deve ser um dicionário, onde a chave é o nome do segredo, e o valor é um dicionário indicando o tipo de segredo (string ou binário) e seu valor. Exemplos:
+
+```toml
+[secrets]
+stringSecret = {string = "abc"}
+binarySecret = {binary = "123"}
+```
+
+### `secrets.*.string`
+
+- Parâmetro obrigatório (conflita com `binary`)
+- Tipo: `str`
+
+Valor como string para o segredo.
+
+### `secrets.*.binary`
+
+- Parâmetro obrigatório (conflita com `string`)
+- Tipo: `str`
+
+Valor como binário para o segredo.
+
 ## `topics`
 
 Essa seção é opcional e descreve os tópicos SNS utilizados pelo Queue Lambda Debugger. Ela deve ser um dicionário, onde a chave é o nome do tópico, e o valor é um dicionário com seus parâmetros conforme descrito a seguir. Exemplos:
