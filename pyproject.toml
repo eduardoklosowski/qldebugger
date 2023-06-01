@@ -39,7 +39,7 @@ autopep8 = "^1.7"
 ruff = "0.0.270"
 mypy = "^0.971"
 pytest = "^7.1"
-pytest-cov = "^3.0"
+pytest-cov = ">=3,<5"
 pytest-xdist = "^2.5"
 moto = {version = "^4.0", extras = ["server"]}
 
