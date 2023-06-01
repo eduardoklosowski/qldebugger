@@ -83,6 +83,15 @@ def infra_create_queues() -> None:
     actions.infra.create_queues()
 
 
+@infra.command('create-all')
+def infra_create_all() -> None:
+    load_config(CONFIG_FILENAME)
+    actions.infra.create_secrets()
+    actions.infra.create_topics()
+    actions.infra.create_queues()
+    actions.infra.subscribe_topics()
+
+
 @infra.command('subscribe-topics')
 def infra_subscribe_topics() -> None:
     load_config(CONFIG_FILENAME)
