@@ -45,7 +45,7 @@ class TestReceiveMessagesAndRunLambda:
                 batch_size=batch_size,
                 maximum_batching_window=maximum_batching_window,
                 function_name=lambda_name,
-            )
+            ),
         }
 
         receive_messages_and_run_lambda(event_source_mapping_name=event_source_mapping_name)

@@ -10,5 +10,10 @@ def print_messages(event: 'SQSEvent', context: None) -> None:
     print(f'Total: {len(event["Records"])} messages')
 
 
+class LambdaCustomError(Exception):
+    def __str__(self) -> str:
+        return 'Lambda execution fail'
+
+
 def exec_fail(event: 'SQSEvent', context: None) -> None:
-    raise Exception('Lambda execution fail')
+    raise LambdaCustomError

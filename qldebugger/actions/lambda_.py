@@ -5,8 +5,7 @@ from typing import TYPE_CHECKING, Any, Callable
 from unittest.mock import patch
 
 from qldebugger.aws import inject_aws_config_in_client
-
-from ..config import get_config
+from qldebugger.config import get_config
 
 if TYPE_CHECKING:
     from aws_lambda_typing.events import SQSEvent
@@ -30,8 +29,8 @@ def run_lambda(*, lambda_name: str, event: 'SQSEvent') -> Any:
         try:
             with patch.dict('os.environ', environment, True):
                 result = lambda_handler(event, None)
-            logger.info('Result: %r', result)
-            return result
         except Exception:
-            logger.error('Error on execute lambda:\n%s', format_exc())
+            logger.exception('Error on execute lambda:\n%s', format_exc())
             raise
+        logger.info('Result: %r', result)
+        return result

@@ -60,7 +60,7 @@ class TestRunLambda:
 
         mock_get_lambda_function.return_value.side_effect = error
 
-        with pytest.raises(Exception) as exc_info:
+        with pytest.raises(Exception, match=error.args[0]) as exc_info:
             run_lambda(lambda_name=lambda_name, event=event)
 
         mock_get_lambda_function.assert_called_once_with(lambda_name=lambda_name)
@@ -106,7 +106,7 @@ class TestRunLambda:
 
         def lambda_function(event: 'ReceiveMessageResultTypeDef', context: None) -> None:
             import boto3
-            boto3.client(  # type: ignore
+            boto3.client(  # type: ignore[call-overload]
                 service_name=service_name,
                 aws_access_key_id=aws_access_key_id,
                 aws_secret_access_key=aws_secret_access_key,

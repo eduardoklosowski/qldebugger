@@ -14,7 +14,7 @@ class TestConfigAWS:
     def test_all_arguments_should_be_optional_and_none_default(self) -> None:
         returned = ConfigAWS()
 
-        for k, v in returned.dict().items():
+        for v in returned.dict().values():
             assert v is None
 
 
@@ -51,28 +51,28 @@ class TestConfigLambda:
     def test_hander_should_raise_erro_on_receive_non_str(self) -> None:
         handler_name = randint(0, 99)
 
+        args = self.DEFAULT_ARGS.copy()
+        args['handler'] = handler_name
         with pytest.raises(ValidationError) as exc_info:
-            args = self.DEFAULT_ARGS.copy()
-            args['handler'] = handler_name
             ConfigLambda(**args)
 
         assert {
-            'type': 'value_error',
-            'loc': tuple(['handler']),
+            'type': 'type_error',
+            'loc': ('handler',),
             'msg': 'should be a str',
         } in exc_info.value.errors()
 
     def test_handler_should_have_a_module_and_function_name(self) -> None:
         handler = randstr()
 
+        args = self.DEFAULT_ARGS.copy()
+        args['handler'] = handler
         with pytest.raises(ValidationError) as exc_info:
-            args = self.DEFAULT_ARGS.copy()
-            args['handler'] = handler
             ConfigLambda(**args)
 
         assert {
             'type': 'value_error',
-            'loc': tuple(['handler']),
+            'loc': ('handler',),
             'msg': 'should have a module and function names',
         } in exc_info.value.errors()
 
@@ -108,7 +108,7 @@ class TestConfig:
         for field in required_fields:
             assert {
                 'type': 'value_error.missing',
-                'loc': tuple([field]),
+                'loc': (field,),
                 'msg': 'field required',
             } in exc_info.value.errors()
 

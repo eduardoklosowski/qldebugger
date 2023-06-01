@@ -34,11 +34,10 @@ aws-lambda-typing = "^2.13"
 boto3-stubs = {version = "^1.24", extras = ["sqs", "sts"]}
 
 [tool.poetry.group.dev.dependencies]
-isort = "^5.10"
+pycodestyle = "^2.9"
 autopep8 = "^1.7"
-flake8 = "^5.0"
+ruff = "0.0.270"
 mypy = "^0.971"
-bandit = "^1.7"
 pytest = "^7.1"
 pytest-cov = "^3.0"
 pytest-xdist = "^2.5"
@@ -53,34 +52,34 @@ mkdocs = "^1.3"
 [tool.poetry.scripts]
 qldebugger = "qldebugger.cli:cli"
 
-[tool.isort]
-sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
-line_length = 119
-multi_line_output = "HANGING_INDENT"
-indent = "    "
-float_to_top = true
-src_paths = ["qldebugger", "tests"]
-
 [tool.autopep8]
 recursive = true
 aggressive = 3
+
+[tool.ruff]
+target-version = "py38"
+line-length = 119
+select = ["ALL"]
+ignore = ["D", "ANN101", "ANN102", "ANN401", "FBT", "EM", "ARG", "PLR0913", "TRY003"]
+
+[tool.ruff.per-file-ignores]
+"qldebugger/example/*.py" = ["T20"]
+"tests/*.py" = ["S101", "S311", "PLR2004"]
+
+[tool.ruff.pep8-naming]
+classmethod-decorators = ["pydantic.validator"]
+
+[tool.ruff.flake8-quotes]
+inline-quotes = "single"
+multiline-quotes = "single"
 
 [tool.mypy]
 follow_imports = "normal"
 warn_unused_configs = true
 show_column_numbers = true
 show_error_codes = true
-disallow_any_generics = true
-disallow_subclassing_any = true
-disallow_untyped_defs = true
-disallow_incomplete_defs = true
-no_implicit_optional = true
-warn_redundant_casts = true
-warn_unused_ignores = true
-warn_return_any = true
-warn_unreachable = true
-implicit_reexport = false
-strict_equality = true
+sqlite_cache = true
+strict = true
 plugins = ["pydantic.mypy"]
 files = ["qldebugger/**/*.py", "tests/**/*.py"]
 
@@ -95,5 +94,6 @@ branch = true
 exclude_lines = [
   "pragma: no cover",
   "if (typing\\.)?TYPE_CHECKING:",
+  "@abstractmethod",
   "@overload",
 ]

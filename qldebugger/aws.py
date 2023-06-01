@@ -38,7 +38,7 @@ def get_client(service_name, /):  # type: ignore[no-untyped-def]
     )
 
 
-get_client = lru_cache(maxsize=None)(get_client)  # type: ignore
+get_client = lru_cache(maxsize=None)(get_client)  # type: ignore[assignment]
 
 
 def inject_aws_config_in_client(
@@ -71,7 +71,7 @@ def inject_aws_config_in_client(
         region_name=region_name,
         profile_name=aws_config.profile,
     )
-    return session.client(  # type: ignore
+    return session.client(  # type: ignore[call-overload,misc]
         service_name=service_name,
         api_version=api_version,
         use_ssl=use_ssl,

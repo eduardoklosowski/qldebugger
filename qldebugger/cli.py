@@ -1,12 +1,12 @@
 import logging
-import os
+from pathlib import Path
 
 import click
 
 from . import actions
 from .config import load_config
 
-CONFIG_FILENAME = 'qldebugger.toml'
+CONFIG_FILENAME = Path('qldebugger.toml')
 
 
 @click.group()
@@ -38,10 +38,10 @@ VARIABLE = "VALUE"
 a = {queue = "myqueue", function_name = "print"}
 b = {queue = "myqueue", function_name = "fail", batch_size = 1, maximum_batching_window = 20}
 '''
-    if os.path.exists(CONFIG_FILENAME):
+    if CONFIG_FILENAME.exists():
         click.echo('Configuration file already exists')
         return
-    with open(CONFIG_FILENAME, 'w') as fp:
+    with CONFIG_FILENAME.open('w') as fp:
         fp.write(config)
     click.echo('Configuration file created')
 

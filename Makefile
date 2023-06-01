@@ -17,33 +17,30 @@ build:
 .PHONY: fmt
 
 fmt:
-	poetry run isort --only-modified $(srcdir) $(testsdir)
 	poetry run autopep8 --in-place $(srcdir) $(testsdir)
+	poetry run ruff --fix $(srcdir) $(testsdir)
 
 
 # Lint
 
-.PHONY: lint lint-poetry lint-isort lint-autopep8 lint-flake8 lint-mypy lint-bandit
+.PHONY: lint lint-poetry lint-pycodestyle lint-autopep8 lint-ruff lint-mypy
 
-lint: lint-poetry lint-isort lint-autopep8 lint-flake8 lint-mypy lint-bandit
+lint: lint-poetry lint-pycodestyle lint-autopep8 lint-ruff lint-mypy
 
 lint-poetry:
 	poetry check
 
-lint-isort:
-	poetry run isort --check --diff $(srcdir) $(testsdir)
+lint-pycodestyle:
+	poetry run pycodestyle --show-source $(srcdir) $(testsdir)
 
 lint-autopep8:
-	poetry run autopep8 --diff $(srcdir) $(testsdir)
+	poetry run autopep8 --diff --exit-code $(srcdir) $(testsdir)
 
-lint-flake8:
-	poetry run flake8 --show-source $(srcdir) $(testsdir)
+lint-ruff:
+	poetry run ruff check --show-source $(srcdir) $(testsdir)
 
 lint-mypy:
 	poetry run mypy --show-error-context --pretty $(srcdir) $(testsdir)
-
-lint-bandit:
-	poetry run bandit --silent --recursive $(srcdir)
 
 
 # Tests
@@ -79,7 +76,7 @@ clean-build:
 clean-cache:
 	find $(srcdir) $(testsdir) -name '__pycache__' -exec rm -rf {} +
 	find $(srcdir) $(testsdir) -type d -empty -delete
-	rm -rf .mypy_cache .pytest_cache .coverage
+	rm -rf .ruff_cache .mypy_cache .pytest_cache .coverage
 
 clean-docs:
 	rm -rf docs-site
