@@ -29,7 +29,7 @@ class TestSendMessage:
 
 class TestReceiveMessage:
     @patch('qldebugger.actions.message.get_client')
-    def test_run_with_messages(self, mock_get_client: Mock) -> None:
+    def test_with_messages_in_queue(self, mock_get_client: Mock) -> None:
         queue_name = randstr()
         queue_url = randstr()
         batch_size = randint(1, 10)
@@ -56,7 +56,7 @@ class TestReceiveMessage:
         assert returned == mock_get_client.return_value.receive_message.return_value
 
     @patch('qldebugger.actions.message.get_client')
-    def test_run_without_messages(self, mock_get_client: Mock) -> None:
+    def test_without_messages_in_queue(self, mock_get_client: Mock) -> None:
         queue_name = randstr()
         queue_url = randstr()
         batch_size = randint(1, 10)

@@ -11,6 +11,7 @@ if TYPE_CHECKING:
 
 
 class TestReceiveMessagesAndRunLambda:
+    @patch('qldebugger.actions.event_source_mapping.get_account_id')
     @patch('qldebugger.actions.event_source_mapping.get_client')
     @patch('qldebugger.actions.event_source_mapping.get_config')
     @patch('qldebugger.actions.event_source_mapping.receive_message')
@@ -25,6 +26,7 @@ class TestReceiveMessagesAndRunLambda:
         mock_receive_message: Mock,
         mock_get_config: Mock,
         mock_get_client: Mock,
+        mock_get_account_id: Mock,
     ) -> None:
         partition = randstr()
         aws_region = randstr()
@@ -36,9 +38,9 @@ class TestReceiveMessagesAndRunLambda:
         maximum_batching_window = randint(0, 20)
         lambda_name = randstr()
 
+        mock_get_account_id.return_value = account_id
         mock_get_client.return_value.meta.partition = partition
         mock_get_client.return_value.meta.region_name = aws_region
-        mock_get_client.return_value.get_caller_identity.return_value = {'Account': account_id}
         mock_get_config.return_value.event_source_mapping = {
             event_source_mapping_name: ConfigEventSourceMapping(
                 queue=queue_name,

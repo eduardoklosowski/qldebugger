@@ -41,6 +41,11 @@ def get_client(service_name, /):  # type: ignore[no-untyped-def]
 get_client = lru_cache(maxsize=None)(get_client)  # type: ignore[assignment]
 
 
+def get_account_id() -> str:
+    sts = get_client('sts')
+    return sts.get_caller_identity()['Account']
+
+
 def inject_aws_config_in_client(
     service_name: str,
     region_name: Optional[str] = None,

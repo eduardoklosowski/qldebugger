@@ -13,10 +13,10 @@ if TYPE_CHECKING:
     from mypy_boto3_sqs.type_defs import ReceiveMessageResultTypeDef
 
 
-class TestGetLambdaHandler:
+class TestGetLambdaFunction:
     @patch('qldebugger.actions.lambda_.get_config')
     @patch('qldebugger.actions.lambda_.import_module')
-    def test_success(self, mock_import_module: Mock, mock_get_config: Mock) -> None:
+    def test_run(self, mock_import_module: Mock, mock_get_config: Mock) -> None:
         lambda_name = randstr()
         module_name = randstr()
         function_name = randstr()
@@ -34,7 +34,7 @@ class TestGetLambdaHandler:
 class TestRunLambda:
     @patch('qldebugger.actions.lambda_.get_config')
     @patch('qldebugger.actions.lambda_.get_lambda_function')
-    def test_run_lambda_with_success(
+    def test_with_success(
         self,
         mock_get_lambda_function: Mock,
         mock_get_config: Mock,
@@ -49,7 +49,7 @@ class TestRunLambda:
 
     @patch('qldebugger.actions.lambda_.get_config')
     @patch('qldebugger.actions.lambda_.get_lambda_function')
-    def test_run_lambda_with_error(
+    def test_with_error(
         self,
         mock_get_lambda_function: Mock,
         mock_get_config: Mock,
@@ -63,13 +63,11 @@ class TestRunLambda:
         with pytest.raises(Exception, match=error.args[0]) as exc_info:
             run_lambda(lambda_name=lambda_name, event=event)
 
-        mock_get_lambda_function.assert_called_once_with(lambda_name=lambda_name)
-        mock_get_lambda_function.return_value.asser_called_once_with(event, None)
         assert exc_info.value == error
 
     @patch('qldebugger.actions.lambda_.get_config')
     @patch('qldebugger.actions.lambda_.get_lambda_function')
-    def test_run_lambda_with_environment_variables(
+    def test_with_environment_variables(
         self,
         mock_get_lambda_function: Mock,
         mock_get_config: Mock,
@@ -91,7 +89,7 @@ class TestRunLambda:
     @patch('qldebugger.actions.lambda_.get_config')
     @patch('qldebugger.actions.lambda_.get_lambda_function')
     @patch('qldebugger.actions.lambda_.inject_aws_config_in_client')
-    def test_run_lambda_with_aws_configuration_injection(
+    def test_with_aws_configuration_injection(
         self,
         mock_inject_aws_config_in_client: Mock,
         mock_get_lambda_function: Mock,

@@ -14,8 +14,8 @@ logger = logging.getLogger(__name__)
 
 
 def get_lambda_function(*, lambda_name: str) -> Callable[['SQSEvent', None], Any]:
-    logger.debug('Importing lambda_handler of %r...', lambda_name)
     module_name, function_name = get_config().lambdas[lambda_name].handler
+    logger.debug('Importing lambda_handler of %r...', lambda_name)
     lambda_handler: Callable[['SQSEvent', None], Any] = \
         getattr(import_module(module_name), function_name)
     return lambda_handler
