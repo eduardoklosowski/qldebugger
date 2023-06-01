@@ -9,7 +9,7 @@ from tests.utils import randstr
 
 
 class TestGetClient:
-    @pytest.mark.parametrize('service', ['sqs', 'sts'])
+    @pytest.mark.parametrize('service', ['sns', 'sqs', 'sts'])
     @patch('qldebugger.aws.get_config')
     @patch('qldebugger.aws.boto3')
     def test_run(self, mock_boto3: Mock, mock_get_config: Mock, service: str) -> None:

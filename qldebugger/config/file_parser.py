@@ -1,4 +1,4 @@
-from typing import Any, BinaryIO, Dict, NamedTuple, Optional, Tuple
+from typing import Any, BinaryIO, Dict, List, NamedTuple, Optional, Tuple
 
 import tomli
 from pydantic import BaseModel, Field, validator
@@ -11,6 +11,16 @@ class ConfigAWS(BaseModel):
     session_token: Optional[str]
     region: Optional[str]
     endpoint_url: Optional[str]
+
+
+class ConfigTopicSubscriber(BaseModel):
+    queue: str
+    raw_message_delivery: bool = False
+    filter_policy: Optional[str] = None
+
+
+class ConfigTopic(BaseModel):
+    subscribers: List[ConfigTopicSubscriber] = Field(default_factory=list)
 
 
 class ConfigQueue(BaseModel):
@@ -45,6 +55,7 @@ class ConfigEventSourceMapping(BaseModel):
 
 class Config(BaseModel):
     aws: ConfigAWS = Field(default_factory=ConfigAWS)
+    topics: Dict[str, ConfigTopic] = Field(default_factory=dict)
     queues: Dict[str, ConfigQueue]
     lambdas: Dict[str, ConfigLambda]
     event_source_mapping: Dict[str, ConfigEventSourceMapping]

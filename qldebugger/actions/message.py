@@ -1,13 +1,30 @@
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Mapping
 
-from qldebugger.aws import get_client
+from qldebugger.aws import get_account_id, get_client
 
 if TYPE_CHECKING:
+    from mypy_boto3_sns.type_defs import MessageAttributeValueTypeDef
     from mypy_boto3_sqs.type_defs import ReceiveMessageResultTypeDef
 
 
 logger = logging.getLogger(__name__)
+
+
+def publish_message(
+    *,
+    topic_name: str,
+    message: str,
+    attributes: Mapping[str, 'MessageAttributeValueTypeDef'] = {},
+) -> None:
+    sns = get_client('sns')
+    arn = f'arn:aws:sns:{sns.meta.region_name}:{get_account_id()}:{topic_name}'
+    logger.info('Sending message to %r topic...', topic_name)
+    sns.publish(
+        TopicArn=arn,
+        Message=message,
+        MessageAttributes=attributes,
+    )
 
 
 def send_message(*, queue_name: str, message: str) -> None:

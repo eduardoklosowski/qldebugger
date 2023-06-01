@@ -56,6 +56,51 @@ Nome da região da AWS que deve ser utilizada.
 
 URL do endpoint para acessar a AWS. Normalmente utilizado por mocks.
 
+## `topics`
+
+Essa seção é opcional e descreve os tópicos SNS utilizados pelo Queue Lambda Debugger. Ela deve ser um dicionário, onde a chave é o nome do tópico, e o valor é um dicionário com seus parâmetros conforme descrito a seguir. Exemplos:
+
+```toml
+[topics]
+mytopic = {}
+
+[[topics.mytopic2.subscribers]]
+queue = "myqueue"
+raw_message_delivery = true
+filter_policy = "{\"status\":[\"success\"]}"
+```
+
+### `topics.*.subscribers`
+
+- Parâmetro opcional
+- Tipo: `List[ConfigTopicSubscriber]`
+- Valor padrão: `[]`
+
+Lista de inscrições para o tópico SNS.
+
+### `topics.*.subscribers[].queue`
+
+- Parâmetro obrigatório
+- Tipo: `str`
+
+Nome da fila SQS que deverá se inscrever para receber as mensagens publicadas nesse tópico.
+
+### `topics.*.subscribers[].raw_message_delivery`
+
+- Parâmatro opcional
+- Tipo: `bool`
+- Valor padrão: `False`
+
+Define se devem ser adicionado campos com informações do tópico nas mensagens entregues na fila SQS.
+
+### `topics.*.subscribers[].filter_policy`
+
+- Pametro opcional
+- Tipo: `Optional[str]`
+- Valor padrão: `None`
+
+Define um filtro para que apenas as mensagens que atendam os critérios sejam encaminhadas para a fila SQS. O exemplo `{\"status\":[\"success\"]}` encaminhará apenas mensagens com o atributo `status` igual a `success`.
+
 ## `queues`
 
 Essa seção é obrigatória e descreve as filas Amazon SQS utilizadas pelo Queue Lambda Debugger. Ela deve ser um dicionário, onde a chave é o nome da fila, e o valor é um dicionário com seus parâmetros, porém na versão atual nenhum parâmetro é definido. Exemplo:
