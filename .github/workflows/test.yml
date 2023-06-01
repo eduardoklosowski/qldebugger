@@ -27,7 +27,7 @@ jobs:
         run: pipx install poetry
 
       - name: Generate datefile
-        run: date +%U > datefile
+        run: echo "test-$(date +%U)" > datefile
 
       - name: Setup python
         id: setup-python
@@ -41,7 +41,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.setup-python.outputs.cache-hit != 'true'
-        run: poetry install
+        run: poetry install --only=main,dev
 
       - name: Check pytest
         run: make test-pytest
