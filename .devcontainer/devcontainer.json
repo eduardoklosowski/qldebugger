@@ -28,7 +28,8 @@
             "extensions": [
                 "editorconfig.editorconfig",
                 "tamasfe.even-better-toml",
-                "ms-python.autopep8"
+                "ms-python.autopep8",
+                "charliermarsh.ruff"
             ]
         }
     }
