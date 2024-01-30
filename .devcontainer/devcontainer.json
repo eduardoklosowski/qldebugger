@@ -1,0 +1,37 @@
+{
+    "name": "qldebugger",
+
+    "image": "mcr.microsoft.com/devcontainers/python:3.8-bookworm",
+    "features": {
+        "ghcr.io/devcontainers-contrib/features/apt-packages:1": {
+            "packages": "bash-completion"
+        },
+        "ghcr.io/devcontainers-contrib/features/poetry:2": {}
+    },
+
+    "containerUser": "vscode",
+    "runArgs": [
+        "--userns=keep-id"
+    ],
+    "mounts": [
+        {
+            "type": "bind",
+            "source": "/etc/localtime",
+            "target": "/etc/localtime"
+        }
+    ],
+
+    "postCreateCommand": "scripts/update-tools-completion.sh\nscripts/init-project.sh",
+
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "editorconfig.editorconfig",
+                "tamasfe.even-better-toml",
+                "ms-python.autopep8",
+                "charliermarsh.ruff",
+                "matangover.mypy"
+            ]
+        }
+    }
+}
