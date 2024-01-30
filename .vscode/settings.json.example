@@ -1,11 +1,14 @@
 {
     "python.defaultInterpreterPath": "python",
-    "python.formatting.provider": "autopep8",
+    "autopep8.importStrategy": "fromEnvironment",
     "ruff.importStrategy": "fromEnvironment",
     "python.linting.mypyEnabled": true,
     "python.testing.pytestEnabled": true,
     "python.testing.pytestArgs": [
         "--no-cov",
         "tests"
-    ]
+    ],
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.autopep8"
+    }
 }

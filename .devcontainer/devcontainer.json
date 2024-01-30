@@ -27,7 +27,8 @@
         "vscode": {
             "extensions": [
                 "editorconfig.editorconfig",
-                "tamasfe.even-better-toml"
+                "tamasfe.even-better-toml",
+                "ms-python.autopep8"
             ]
         }
     }

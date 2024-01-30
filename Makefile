@@ -17,7 +17,7 @@ build:
 .PHONY: fmt
 
 fmt:
-	poetry run autopep8 --in-place $(srcdir) $(testsdir)
+	poetry run autopep8 --recursive --in-place $(srcdir) $(testsdir)
 	poetry run ruff --fix $(srcdir) $(testsdir)
 
 
@@ -34,7 +34,7 @@ lint-pycodestyle:
 	poetry run pycodestyle --show-source $(srcdir) $(testsdir)
 
 lint-autopep8:
-	poetry run autopep8 --diff --exit-code $(srcdir) $(testsdir)
+	poetry run autopep8 --diff --exit-code --recursive $(srcdir) $(testsdir)
 
 lint-ruff:
 	poetry run ruff check --show-source $(srcdir) $(testsdir)
