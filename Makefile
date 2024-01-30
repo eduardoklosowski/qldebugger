@@ -76,7 +76,7 @@ clean-build:
 clean-cache:
 	find $(srcdir) $(testsdir) -name '__pycache__' -exec rm -rf {} +
 	find $(srcdir) $(testsdir) -type d -empty -delete
-	rm -rf .ruff_cache .mypy_cache .pytest_cache .coverage
+	rm -rf .ruff_cache .mypy_cache .pytest_cache .coverage .coverage.*
 
 clean-docs:
 	rm -rf docs-site
