@@ -29,7 +29,8 @@
                 "editorconfig.editorconfig",
                 "tamasfe.even-better-toml",
                 "ms-python.autopep8",
-                "charliermarsh.ruff"
+                "charliermarsh.ruff",
+                "matangover.mypy"
             ]
         }
     }

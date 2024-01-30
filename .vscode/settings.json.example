@@ -2,7 +2,11 @@
     "python.defaultInterpreterPath": "python",
     "autopep8.importStrategy": "fromEnvironment",
     "ruff.importStrategy": "fromEnvironment",
-    "python.linting.mypyEnabled": true,
+    "mypy.runUsingActiveInterpreter": true,
+    "mypy.targets": [
+        "qldebugger",
+        "tests"
+    ],
     "python.testing.pytestEnabled": true,
     "python.testing.pytestArgs": [
         "--no-cov",
