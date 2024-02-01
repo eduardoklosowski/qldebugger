@@ -21,7 +21,7 @@ jobs:
         python-version: ["3.8", "3.9", "3.10", "3.11"]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup poetry
         run: pipx install poetry
@@ -54,7 +54,7 @@ jobs:
         python-version: ["3.8", "3.9", "3.10", "3.11"]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup poetry
         run: pipx install poetry
@@ -84,7 +84,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup poetry
         run: pipx install poetry
