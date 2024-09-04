@@ -30,9 +30,9 @@
         "autopep8.importStrategy": "fromEnvironment",
         "ruff.importStrategy": "fromEnvironment",
         "mypy.runUsingActiveInterpreter": true,
-        "mypy.targets": ["qldebugger", "tests"],
+        "mypy.targets": ["src", "tests"],
         "python.testing.pytestEnabled": true,
-        "python.testing.pytestArgs": ["--no-cov", "tests"],
+        "python.testing.pytestArgs": ["-vv", "tests"],
         "[python]": {
           "editor.defaultFormatter": "ms-python.autopep8"
         }

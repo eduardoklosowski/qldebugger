@@ -1,8 +1,8 @@
 from unittest.mock import Mock, patch
 
 import pytest
-
 from qldebugger.config import get_config, load_config
+
 from tests.utils import randstr
 
 

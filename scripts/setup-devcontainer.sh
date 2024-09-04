@@ -13,4 +13,4 @@ echo 'eval "$(register-python-argcomplete pipx)"' > ~/.local/share/bash-completi
 echo 'eval "$(poetry completions bash)"' > ~/.local/share/bash-completion/completions/poetry
 
 # Init project
-poetry install --with=docs
+make init

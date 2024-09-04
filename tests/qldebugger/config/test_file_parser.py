@@ -5,7 +5,6 @@ from unittest.mock import Mock, patch
 
 import pytest
 from pydantic import ValidationError
-
 from qldebugger.config.file_parser import (
     Config,
     ConfigAWS,
@@ -18,6 +17,7 @@ from qldebugger.config.file_parser import (
     ConfigTopicSubscriber,
     NameHandlerTuple,
 )
+
 from tests.utils import randstr
 
 

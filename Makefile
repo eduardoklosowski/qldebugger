@@ -1,6 +1,6 @@
 # Project
 
-srcdir = qldebugger
+srcdir = src
 testsdir = tests
 
 
@@ -10,6 +10,14 @@ testsdir = tests
 
 build:
 	poetry build
+
+
+# Init
+
+.PHONY: init
+
+init:
+	poetry install --sync
 
 
 # Format
@@ -50,7 +58,7 @@ lint-mypy:
 test: test-pytest
 
 test-pytest:
-	poetry run pytest --numprocesses=auto $(testsdir)
+	poetry run pytest --cov=qldebugger --cov-report=term-missing --no-cov-on-fail $(testsdir)
 
 
 # Docs
@@ -66,16 +74,18 @@ docs-serve:
 
 # Clean
 
-.PHONY: clean clean-build clean-cache clean-docs clean-lock
+.PHONY: clean clean-build clean-pycache clean-python-tools clean-docs clean-lock dist-clean
 
-clean: clean-build clean-cache clean-docs
+clean: clean-build clean-pycache clean-python-tools clean-docs
 
 clean-build:
 	rm -rf dist
 
-clean-cache:
+clean-pycache:
 	find $(srcdir) $(testsdir) -name '__pycache__' -exec rm -rf {} +
 	find $(srcdir) $(testsdir) -type d -empty -delete
+
+clean-python-tools:
 	rm -rf .ruff_cache .mypy_cache .pytest_cache .coverage .coverage.*
 
 clean-docs:
@@ -83,6 +93,9 @@ clean-docs:
 
 clean-lock:
 	rm -rf poetry.lock
+
+dist-clean: clean clean-lock
+	rm -rf .venv qldebugger.toml
 
 
 # Misc

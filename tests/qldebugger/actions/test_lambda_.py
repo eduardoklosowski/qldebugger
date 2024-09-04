@@ -3,9 +3,9 @@ from typing import TYPE_CHECKING, cast
 from unittest.mock import Mock, patch
 
 import pytest
-
 from qldebugger.actions.lambda_ import get_lambda_function, run_lambda
 from qldebugger.config.file_parser import ConfigLambda
+
 from tests.utils import randstr
 
 if TYPE_CHECKING:

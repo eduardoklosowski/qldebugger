@@ -2,7 +2,6 @@ from random import randint
 from unittest.mock import Mock, patch
 
 from botocore.exceptions import ClientError
-
 from qldebugger.actions.infra import create_queues, create_secrets, create_topics, subscribe_topics
 from qldebugger.config.file_parser import (
     ConfigQueue,
@@ -11,6 +10,7 @@ from qldebugger.config.file_parser import (
     ConfigTopic,
     ConfigTopicSubscriber,
 )
+
 from tests.utils import randstr
 
 

@@ -1,11 +1,11 @@
 # Python
 *.py[cod]
 __pycache__
-/poetry.lock
-/dist
 
 # Development tools
 /.venv
+/poetry.lock
+/dist
 /.ruff_cache
 /.mypy_cache
 /.pytest_cache

@@ -3,8 +3,8 @@ from typing import TYPE_CHECKING, Any, Mapping, cast
 from unittest.mock import Mock, patch
 
 import pytest
-
 from qldebugger.actions.message import delete_messages, publish_message, receive_message, send_message
+
 from tests.utils import randstr
 
 if TYPE_CHECKING:

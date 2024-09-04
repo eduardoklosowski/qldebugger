@@ -3,8 +3,8 @@ from typing import Any
 from unittest.mock import Mock, patch
 
 import pytest
-
 from qldebugger.example.lambdas import LambdaCustomError, exec_fail, print_messages
+
 from tests.utils import randstr
 
 
