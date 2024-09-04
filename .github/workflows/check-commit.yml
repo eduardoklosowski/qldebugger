@@ -1,37 +1,33 @@
 name: Check Commit
 
 on:
+  workflow_dispatch:
   push:
-    branches:
-      - "*"
-    tags:
-      - "*"
   pull_request:
-    types: [opened, synchronize, reopened]
 
 permissions:
   contents: read
 
 jobs:
   lint:
-    name: Lint
-    runs-on: ubuntu-latest
+    name: Check Lints
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup poetry
-        run: pipx install poetry
+        run: pipx install poetry==1.8.3
 
       - name: Generate datefile
         run: echo "lint-$(date +%U)" > datefile
 
       - name: Setup python
         id: setup-python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           cache: poetry
@@ -41,30 +37,30 @@ jobs:
 
       - name: Install dependencies
         if: steps.setup-python.outputs.cache-hit != 'true'
-        run: poetry install --only=main,type,dev
+        run: poetry install --sync --only=main,type,dev
 
       - name: Run lints
         run: make lint
 
   test:
-    name: Test
-    runs-on: ubuntu-latest
+    name: Check Test
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup poetry
-        run: pipx install poetry
+        run: pipx install poetry==1.8.3
 
       - name: Generate datefile
         run: echo "test-$(date +%U)" > datefile
 
       - name: Setup python
         id: setup-python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           cache: poetry
@@ -74,27 +70,27 @@ jobs:
 
       - name: Install dependencies
         if: steps.setup-python.outputs.cache-hit != 'true'
-        run: poetry install --only=main,dev
+        run: poetry install --sync --only=main,dev
 
       - name: Run tests
         run: make test
 
   docs:
-    name: Docs
+    name: Check Docs
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup poetry
-        run: pipx install poetry
+        run: pipx install poetry==1.8.3
 
       - name: Generate datefile
         run: echo "docs-$(date +%U)" > datefile
 
       - name: Setup python
         id: setup-python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.8"
           cache: poetry
@@ -104,7 +100,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.setup-python.outputs.cache-hit != 'true'
-        run: poetry install --only=docs
+        run: poetry install --sync --only=docs
 
       - name: Check build
         run: make docs-build
