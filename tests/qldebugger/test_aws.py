@@ -2,9 +2,9 @@ from random import randint
 from unittest.mock import Mock, patch
 
 import pytest
+
 from qldebugger.aws import get_account_id, get_client, inject_aws_config_in_client
 from qldebugger.config.file_parser import ConfigAWS
-
 from tests.utils import randstr
 
 

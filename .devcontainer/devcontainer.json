@@ -21,20 +21,18 @@
       "extensions": [
         "editorconfig.editorconfig",
         "tamasfe.even-better-toml",
-        "ms-python.autopep8",
         "charliermarsh.ruff",
         "matangover.mypy"
       ],
       "settings": {
         "python.defaultInterpreterPath": "./.venv/bin/python",
-        "autopep8.importStrategy": "fromEnvironment",
         "ruff.importStrategy": "fromEnvironment",
         "mypy.runUsingActiveInterpreter": true,
         "mypy.targets": ["src", "tests"],
         "python.testing.pytestEnabled": true,
         "python.testing.pytestArgs": ["-vv", "tests"],
         "[python]": {
-          "editor.defaultFormatter": "ms-python.autopep8"
+          "editor.defaultFormatter": "charliermarsh.ruff"
         }
       }
     }

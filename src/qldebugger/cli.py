@@ -21,7 +21,7 @@ def cli() -> None:
 
 @cli.command()
 def init() -> None:
-    config = '''[aws]
+    config = """[aws]
 profile = ""
 access_key_id = "secret"
 secret_access_key = "secret"
@@ -42,7 +42,7 @@ VARIABLE = "VALUE"
 [event_source_mapping]
 a = {queue = "myqueue", function_name = "print"}
 b = {queue = "myqueue", function_name = "fail", batch_size = 1, maximum_batching_window = 20}
-'''
+"""
     if CONFIG_FILENAME.exists():
         click.echo('Configuration file already exists')
         return
@@ -60,9 +60,9 @@ def run(event_source_mapping_name: str) -> None:
 
 # Infra
 
+
 @cli.group()
-def infra() -> None:
-    ...
+def infra() -> None: ...
 
 
 @infra.command('create-secrets')
@@ -100,9 +100,9 @@ def infra_subscribe_topics() -> None:
 
 # Msg
 
+
 @cli.group()
-def msg() -> None:
-    ...
+def msg() -> None: ...
 
 
 @msg.command('publish')

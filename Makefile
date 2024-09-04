@@ -25,27 +25,24 @@ init:
 .PHONY: fmt
 
 fmt:
-	poetry run autopep8 --recursive --in-place $(srcdir) $(testsdir)
-	poetry run ruff --fix $(srcdir) $(testsdir)
+	poetry run ruff check --select I001 --fix $(srcdir) $(testsdir)
+	poetry run ruff format $(srcdir) $(testsdir)
 
 
 # Lint
 
-.PHONY: lint lint-poetry lint-pycodestyle lint-autopep8 lint-ruff lint-mypy
+.PHONY: lint lint-poetry lint-ruff-format lint-ruff-check lint-mypy
 
-lint: lint-poetry lint-pycodestyle lint-autopep8 lint-ruff lint-mypy
+lint: lint-poetry lint-ruff-format lint-ruff-check lint-mypy
 
 lint-poetry:
 	poetry check
 
-lint-pycodestyle:
-	poetry run pycodestyle --show-source $(srcdir) $(testsdir)
+lint-ruff-format:
+	poetry run ruff format --diff $(srcdir) $(testsdir)
 
-lint-autopep8:
-	poetry run autopep8 --diff --exit-code --recursive $(srcdir) $(testsdir)
-
-lint-ruff:
-	poetry run ruff check --show-source $(srcdir) $(testsdir)
+lint-ruff-check:
+	poetry run ruff check $(srcdir) $(testsdir)
 
 lint-mypy:
 	poetry run mypy --show-error-context --pretty $(srcdir) $(testsdir)

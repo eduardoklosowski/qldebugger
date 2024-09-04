@@ -4,7 +4,6 @@ from unittest.mock import Mock, patch
 
 from qldebugger.actions.event_source_mapping import convert_sqs_messages_to_event, receive_messages_and_run_lambda
 from qldebugger.config.file_parser import ConfigEventSourceMapping
-
 from tests.utils import randstr
 
 if TYPE_CHECKING:

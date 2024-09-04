@@ -2,6 +2,7 @@ from random import randint
 from unittest.mock import Mock, patch
 
 from botocore.exceptions import ClientError
+
 from qldebugger.actions.infra import create_queues, create_secrets, create_topics, subscribe_topics
 from qldebugger.config.file_parser import (
     ConfigQueue,
@@ -10,7 +11,6 @@ from qldebugger.config.file_parser import (
     ConfigTopic,
     ConfigTopicSubscriber,
 )
-
 from tests.utils import randstr
 
 
@@ -21,8 +21,7 @@ class TestCreateSecrets:
         secrets = {randstr(): randstr() for _ in range(randint(2, 5))}
 
         mock_get_config.return_value.secrets = {
-            name: ConfigSecretString(string=value)
-            for name, value in secrets.items()
+            name: ConfigSecretString(string=value) for name, value in secrets.items()
         }
         mock_get_client.return_value.describe_secret.side_effect = ClientError({}, '')
 
@@ -40,8 +39,7 @@ class TestCreateSecrets:
         secrets = {randstr(): randstr().encode() for _ in range(randint(2, 5))}
 
         mock_get_config.return_value.secrets = {
-            name: ConfigSecretBinary(binary=value)
-            for name, value in secrets.items()
+            name: ConfigSecretBinary(binary=value) for name, value in secrets.items()
         }
         mock_get_client.return_value.describe_secret.side_effect = ClientError({}, '')
 
@@ -59,8 +57,7 @@ class TestCreateSecrets:
         secrets = {randstr(): randstr() for _ in range(randint(2, 5))}
 
         mock_get_config.return_value.secrets = {
-            name: ConfigSecretString(string=value)
-            for name, value in secrets.items()
+            name: ConfigSecretString(string=value) for name, value in secrets.items()
         }
 
         create_secrets()
@@ -77,8 +74,7 @@ class TestCreateSecrets:
         secrets = {randstr(): randstr().encode() for _ in range(randint(2, 5))}
 
         mock_get_config.return_value.secrets = {
-            name: ConfigSecretBinary(binary=value)
-            for name, value in secrets.items()
+            name: ConfigSecretBinary(binary=value) for name, value in secrets.items()
         }
 
         create_secrets()
@@ -283,10 +279,11 @@ class TestSubscribeTopics:
     ) -> None:
         subscriptions = [randstr() for _ in range(randint(2, 5))]
 
-        mock_get_client.return_value.list_subscriptions.return_value = {'Subscriptions': [
-            {'SubscriptionArn': subscription, 'Endpoint': randstr()}
-            for subscription in subscriptions
-        ]}
+        mock_get_client.return_value.list_subscriptions.return_value = {
+            'Subscriptions': [
+                {'SubscriptionArn': subscription, 'Endpoint': randstr()} for subscription in subscriptions
+            ]
+        }
 
         subscribe_topics()
 

@@ -3,8 +3,8 @@ from typing import TYPE_CHECKING, Any, Mapping, cast
 from unittest.mock import Mock, patch
 
 import pytest
-from qldebugger.actions.message import delete_messages, publish_message, receive_message, send_message
 
+from qldebugger.actions.message import delete_messages, publish_message, receive_message, send_message
 from tests.utils import randstr
 
 if TYPE_CHECKING:
@@ -135,8 +135,7 @@ class TestDeleteMessages:
         queue_url = randstr()
         messages: 'ReceiveMessageResultTypeDef' = {
             'Messages': [
-                {'MessageId': randstr(), 'ReceiptHandle': randstr(), 'Body': randstr()}
-                for _ in range(randint(1, 10))
+                {'MessageId': randstr(), 'ReceiptHandle': randstr(), 'Body': randstr()} for _ in range(randint(1, 10))
             ],
             'ResponseMetadata': cast(Any, None),
         }
@@ -153,6 +152,7 @@ class TestDeleteMessages:
                 {
                     'Id': message['MessageId'],
                     'ReceiptHandle': message['ReceiptHandle'],
-                } for message in messages['Messages']
+                }
+                for message in messages['Messages']
             ],
         )
