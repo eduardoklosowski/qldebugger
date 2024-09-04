@@ -15,9 +15,9 @@ classifiers = [
   "Development Status :: 1 - Planning",
   "Environment :: Console",
   "Intended Audience :: Developers",
-  "Natural Language :: English",
   "Operating System :: OS Independent",
   "Topic :: Software Development :: Debuggers",
+  "Topic :: Software Development :: Testing",
   "Topic :: System :: Emulators",
   "Typing :: Typed",
 ]
