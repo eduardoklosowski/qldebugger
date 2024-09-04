@@ -5,6 +5,7 @@ __pycache__
 /dist
 
 # Development tools
+/.venv
 /.ruff_cache
 /.mypy_cache
 /.pytest_cache
@@ -17,8 +18,7 @@ __pycache__
 # Editors
 *.swp
 /.idea
-/.vscode/*
-!/.vscode/*.example
+/.vscode
 
 # Configs
 /qldebugger.toml

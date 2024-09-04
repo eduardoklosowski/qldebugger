@@ -1,16 +1,11 @@
 {
   "name": "qldebugger",
 
-  "image": "mcr.microsoft.com/devcontainers/python:3.8-bookworm",
+  "image": "mcr.microsoft.com/devcontainers/python:1-3.8-bookworm",
   "features": {
-    "ghcr.io/devcontainers-contrib/features/apt-packages:1": {"packages": "bash-completion"},
-    "ghcr.io/devcontainers-contrib/features/poetry:2": {}
+    "ghcr.io/devcontainers-contrib/features/poetry:2": {"version": "1.8.3"}
   },
 
-  "containerUser": "vscode",
-  "runArgs": [
-    "--userns=keep-id"
-  ],
   "mounts": [
     {
       "type": "bind",
@@ -19,7 +14,7 @@
     }
   ],
 
-  "postCreateCommand": "scripts/update-tools-completion.sh\nscripts/init-project.sh",
+  "postCreateCommand": "./scripts/setup-devcontainer.sh",
 
   "customizations": {
     "vscode": {
@@ -29,7 +24,19 @@
         "ms-python.autopep8",
         "charliermarsh.ruff",
         "matangover.mypy"
-      ]
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "./.venv/bin/python",
+        "autopep8.importStrategy": "fromEnvironment",
+        "ruff.importStrategy": "fromEnvironment",
+        "mypy.runUsingActiveInterpreter": true,
+        "mypy.targets": ["qldebugger", "tests"],
+        "python.testing.pytestEnabled": true,
+        "python.testing.pytestArgs": ["--no-cov", "tests"],
+        "[python]": {
+          "editor.defaultFormatter": "ms-python.autopep8"
+        }
+      }
     }
   }
 }
