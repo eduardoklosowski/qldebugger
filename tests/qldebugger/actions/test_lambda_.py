@@ -21,9 +21,11 @@ class TestGetLambdaFunction:
         module_name = randstr()
         function_name = randstr()
 
-        mock_get_config.return_value.lambdas = {lambda_name: ConfigLambda(
-            handler=f'{module_name}.{function_name}',
-        )}
+        mock_get_config.return_value.lambdas = {
+            lambda_name: ConfigLambda(
+                handler=f'{module_name}.{function_name}',
+            )
+        }
 
         returned = get_lambda_function(lambda_name=lambda_name)
 
@@ -78,6 +80,7 @@ class TestRunLambda:
 
         def lambda_function(event: 'ReceiveMessageResultTypeDef', context: None) -> None:
             import os
+
             for k, v in environment.items():
                 assert os.environ[k] == v
 
@@ -104,6 +107,7 @@ class TestRunLambda:
 
         def lambda_function(event: 'ReceiveMessageResultTypeDef', context: None) -> None:
             import boto3
+
             boto3.client(  # type: ignore[call-overload]
                 service_name=service_name,
                 aws_access_key_id=aws_access_key_id,

@@ -135,8 +135,7 @@ class TestDeleteMessages:
         queue_url = randstr()
         messages: 'ReceiveMessageResultTypeDef' = {
             'Messages': [
-                {'MessageId': randstr(), 'ReceiptHandle': randstr(), 'Body': randstr()}
-                for _ in range(randint(1, 10))
+                {'MessageId': randstr(), 'ReceiptHandle': randstr(), 'Body': randstr()} for _ in range(randint(1, 10))
             ],
             'ResponseMetadata': cast(Any, None),
         }
@@ -153,6 +152,7 @@ class TestDeleteMessages:
                 {
                     'Id': message['MessageId'],
                     'ReceiptHandle': message['ReceiptHandle'],
-                } for message in messages['Messages']
+                }
+                for message in messages['Messages']
             ],
         )

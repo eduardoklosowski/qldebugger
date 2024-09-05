@@ -65,7 +65,8 @@ def delete_messages(*, queue_name: str, messages: 'ReceiveMessageResultTypeDef')
             {
                 'Id': message['MessageId'],
                 'ReceiptHandle': message['ReceiptHandle'],
-            } for message in messages['Messages']
+            }
+            for message in messages['Messages']
         ],
     )
     logger.info('Deleted %d messages from %r queue', len(messages['Messages']), queue_name)

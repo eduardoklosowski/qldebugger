@@ -10,7 +10,7 @@ Exemplo de configuração do arquivo `.vscode/launch.json`:
   "configurations": [
     {
       "name": "Lambda myrun",
-      "type": "python",
+      "type": "debugpy",
       "request": "launch",
       "module": "qldebugger",
       "args": ["run", "myrun"],

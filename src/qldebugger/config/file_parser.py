@@ -16,8 +16,7 @@ class ConfigAWS(BaseModel):
 
 class ConfigSecret(BaseModel, ABC):
     @abstractmethod
-    def get_value(self) -> Union[str, bytes]:
-        ...
+    def get_value(self) -> Union[str, bytes]: ...
 
 
 class ConfigSecretString(ConfigSecret):
@@ -44,8 +43,7 @@ class ConfigTopic(BaseModel):
     subscribers: List[ConfigTopicSubscriber] = Field(default_factory=list)
 
 
-class ConfigQueue(BaseModel):
-    ...
+class ConfigQueue(BaseModel): ...
 
 
 class NameHandlerTuple(NamedTuple):
