@@ -26,7 +26,7 @@ classifiers = [
 python = "^3.8"
 boto3 = "^1.35"
 click = "^8.1"
-pydantic = "^1.10"
+pydantic = "^2.8"
 tomli = "^2.0"
 
 [tool.poetry.group.type.dependencies]
@@ -60,7 +60,7 @@ quote-style = "single"
 
 [tool.ruff.lint]
 select = ["ALL"]
-ignore = ["D", "UP037", "ANN401", "FBT", "COM812", "EM", "FA100", "ISC001", "PLR0913", "TRY003", "PERF203"]
+ignore = ["D", "UP037", "ANN401", "FBT", "COM812", "EM", "FA100", "ISC001", "PLR0913", "TRY003", "TRY004", "PERF203"]
 
 [tool.ruff.lint.per-file-ignores]
 "src/qldebugger/example/*.py" = ["T20", "ARG001"]

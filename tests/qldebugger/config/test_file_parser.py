@@ -25,7 +25,7 @@ class TestConfigAWS:
     def test_all_arguments_should_be_optional_and_none_default(self) -> None:
         returned = ConfigAWS()
 
-        for v in returned.dict().values():
+        for v in returned.model_dump().values():
             assert v is None
 
 
@@ -55,7 +55,7 @@ class TestConfigTopicSubscriber:
 
         returned = ConfigTopicSubscriber(queue=queue_name)
 
-        assert returned.dict() == {
+        assert returned.model_dump() == {
             'queue': queue_name,
             'raw_message_delivery': False,
             'filter_policy': None,
@@ -66,7 +66,7 @@ class TestConfigTopic:
     def test_default_values(self) -> None:
         returned = ConfigTopic()
 
-        assert returned.dict() == {
+        assert returned.model_dump() == {
             'subscribers': [],
         }
 
@@ -75,7 +75,7 @@ class TestConfigQueue:
     def test_empty_object(self) -> None:
         returned = ConfigQueue()
 
-        assert returned.dict() == {}
+        assert returned.model_dump() == {}
 
 
 class TestNameHandlerTuple:
@@ -96,7 +96,7 @@ class TestConfigLambda:
     def test_default_values(self) -> None:
         returned = ConfigLambda(**self.DEFAULT_ARGS)
 
-        assert returned.dict() == {
+        assert returned.model_dump() == {
             'handler': tuple(self.DEFAULT_ARGS['handler'].rsplit('.', maxsplit=1)),
             'environment': {},
         }
@@ -122,11 +122,8 @@ class TestConfigLambda:
         with pytest.raises(ValidationError) as exc_info:
             ConfigLambda(**args)
 
-        assert {
-            'type': 'type_error',
-            'loc': ('handler',),
-            'msg': 'should be a str',
-        } in exc_info.value.errors()
+        errors = [error['loc'] for error in exc_info.value.errors() if error['type'] == 'value_error']
+        assert ('handler',) in errors
 
     def test_handler_should_have_a_module_and_function_name(self) -> None:
         handler = randstr()
@@ -136,11 +133,8 @@ class TestConfigLambda:
         with pytest.raises(ValidationError) as exc_info:
             ConfigLambda(**args)
 
-        assert {
-            'type': 'value_error',
-            'loc': ('handler',),
-            'msg': 'should have a module and function names',
-        } in exc_info.value.errors()
+        errors = [error['loc'] for error in exc_info.value.errors() if error['type'] == 'value_error']
+        assert ('handler',) in errors
 
     def test_environment(self) -> None:
         args = self.DEFAULT_ARGS.copy()
@@ -159,7 +153,7 @@ class TestConfigEventSourceMapping:
     def test_default_values(self) -> None:
         returned = ConfigEventSourceMapping(**self.DEFAULT_ARGS)
 
-        assert returned.dict() == {
+        assert returned.model_dump() == {
             'queue': self.DEFAULT_ARGS['queue'],
             'function_name': self.DEFAULT_ARGS['function_name'],
             'batch_size': 10,
@@ -172,15 +166,12 @@ class TestConfig:
         required_fields = ['queues', 'lambdas', 'event_source_mapping']
 
         with pytest.raises(ValidationError) as exc_info:
-            Config.parse_obj({})
+            Config.model_validate({})
 
         assert len(required_fields) == len(exc_info.value.errors())
+        errors = {error['loc'] for error in exc_info.value.errors() if error['type'] == 'missing'}
         for field in required_fields:
-            assert {
-                'type': 'value_error.missing',
-                'loc': (field,),
-                'msg': 'field required',
-            } in exc_info.value.errors()
+            assert (field,) in errors
 
     @patch('qldebugger.config.file_parser.tomli.load')
     def test_from_toml(self, mock_load: Mock) -> None:
