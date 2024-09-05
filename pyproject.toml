@@ -26,6 +26,7 @@ classifiers = [
 python = "^3.8"
 boto3 = "^1.35"
 click = "^8.1"
+graphlib_backport = {version = "^1.1", python = "<3.9"}
 pydantic = "^2.8"
 tomli = "^2.0"
 
@@ -80,6 +81,12 @@ sqlite_cache = true
 strict = true
 plugins = ["pydantic.mypy"]
 files = ["src/**/*.py", "tests/**/*.py"]
+
+[[tool.mypy.overrides]]
+module = [
+  "graphlib.*",
+]
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

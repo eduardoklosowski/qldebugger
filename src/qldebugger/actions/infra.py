@@ -1,10 +1,16 @@
+import json
 import logging
+from typing import TYPE_CHECKING, Dict
 
 from botocore.exceptions import ClientError
+from graphlib import TopologicalSorter
 
 from qldebugger.aws import get_account_id, get_client
 from qldebugger.config import get_config
-from qldebugger.config.file_parser import ConfigSecretString
+from qldebugger.config.file_parser import ConfigQueue, ConfigSecretString
+
+if TYPE_CHECKING:
+    from mypy_boto3_sqs.literals import QueueAttributeNameType
 
 logger = logging.getLogger(__name__)
 
@@ -43,10 +49,33 @@ def create_topics() -> None:
 def create_queues() -> None:
     sqs = get_client('sqs')
     queues = get_config().queues
+    order = TopologicalSorter(
+        {
+            name: {queue.redrive_policy.dead_letter_queue} if queue.redrive_policy else set()
+            for name, queue in queues.items()
+        }
+    ).static_order()
 
-    for queue_name in queues:
-        logger.info('Creating %r queue...', queue_name)
-        sqs.create_queue(QueueName=queue_name)
+    for queue_name in order:
+        attributes: Dict['QueueAttributeNameType', str] = {}
+        if redrive_policy := queues.get(queue_name, ConfigQueue()).redrive_policy:
+            logger.debug('Checking dead letter queue (%r) for %r...', redrive_policy.dead_letter_queue, queue_name)
+            dead_letter_queue_attributes = sqs.get_queue_attributes(
+                QueueUrl=redrive_policy.dead_letter_queue, AttributeNames=['QueueArn']
+            )
+            attributes['RedrivePolicy'] = json.dumps(
+                {
+                    'deadLetterTargetArn': dead_letter_queue_attributes['Attributes']['QueueArn'],
+                    'maxReceiveCount': redrive_policy.max_receive_count,
+                }
+            )
+        try:
+            queue_url = sqs.get_queue_url(QueueName=queue_name)
+            logger.info('Updating %r queue...', queue_name)
+            sqs.set_queue_attributes(QueueUrl=queue_url['QueueUrl'], Attributes=attributes)
+        except ClientError:
+            logger.info('Creating %r queue...', queue_name)
+            sqs.create_queue(QueueName=queue_name, Attributes=attributes)
 
 
 def subscribe_topics() -> None:
