@@ -44,7 +44,7 @@ moto = {version = "^5.0", extras = ["server", "secretsmanager", "sns", "sqs", "s
 optional = true
 
 [tool.poetry.group.docs.dependencies]
-mkdocs = "^1.4"
+mkdocs = "^1.6"
 
 [tool.poetry.scripts]
 qldebugger = "qldebugger.cli:cli"
