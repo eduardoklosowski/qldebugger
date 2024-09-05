@@ -2,21 +2,22 @@ from abc import ABC, abstractmethod
 from typing import Any, BinaryIO, Dict, List, NamedTuple, Optional, Tuple, Union
 
 import tomli
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 
 class ConfigAWS(BaseModel):
-    profile: Optional[str]
-    access_key_id: Optional[str]
-    secret_access_key: Optional[str]
-    session_token: Optional[str]
-    region: Optional[str]
-    endpoint_url: Optional[str]
+    profile: Optional[str] = None
+    access_key_id: Optional[str] = None
+    secret_access_key: Optional[str] = None
+    session_token: Optional[str] = None
+    region: Optional[str] = None
+    endpoint_url: Optional[str] = None
 
 
 class ConfigSecret(BaseModel, ABC):
     @abstractmethod
-    def get_value(self) -> Union[str, bytes]: ...
+    def get_value(self) -> Union[str, bytes]:
+        raise NotImplementedError
 
 
 class ConfigSecretString(ConfigSecret):
@@ -55,10 +56,11 @@ class ConfigLambda(BaseModel):
     handler: NameHandlerTuple
     environment: Dict[str, str] = Field(default_factory=dict)
 
-    @validator('handler', pre=True)
+    @field_validator('handler', mode='before')
+    @classmethod
     def _split_handler(cls, v: Any) -> Tuple[str, str]:
         if not isinstance(v, str):
-            raise TypeError('should be a str')
+            raise ValueError('should be a str')
         if '.' not in v:
             raise ValueError('should have a module and function names')
         module, function = v.rsplit('.', maxsplit=1)
@@ -82,4 +84,4 @@ class Config(BaseModel):
 
     @classmethod
     def from_toml(cls, fp: BinaryIO, /) -> 'Config':
-        return cls.parse_obj(tomli.load(fp))
+        return cls.model_validate(tomli.load(fp))

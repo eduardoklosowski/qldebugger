@@ -24,14 +24,14 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.8"
-boto3 = "^1.26"
+boto3 = "^1.35"
 click = "^8.1"
-pydantic = "^1.10"
+pydantic = "^2.8"
 tomli = "^2.0"
 
 [tool.poetry.group.type.dependencies]
-aws-lambda-typing = "^2.17"
-boto3-stubs = {version = "^1.26", extras = ["secretsmanager", "sns", "sqs", "sts"]}
+aws-lambda-typing = "^2.20"
+boto3-stubs = {version = "^1.35", extras = ["secretsmanager", "sns", "sqs", "sts"]}
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.6"
@@ -44,7 +44,7 @@ moto = {version = "^5.0", extras = ["server", "secretsmanager", "sns", "sqs", "s
 optional = true
 
 [tool.poetry.group.docs.dependencies]
-mkdocs = "^1.4"
+mkdocs = "^1.6"
 
 [tool.poetry.scripts]
 qldebugger = "qldebugger.cli:cli"
@@ -60,7 +60,7 @@ quote-style = "single"
 
 [tool.ruff.lint]
 select = ["ALL"]
-ignore = ["D", "UP037", "ANN401", "FBT", "COM812", "EM", "FA100", "ISC001", "PLR0913", "TRY003", "PERF203"]
+ignore = ["D", "UP037", "ANN401", "FBT", "COM812", "EM", "FA100", "ISC001", "PLR0913", "TRY003", "TRY004", "PERF203"]
 
 [tool.ruff.lint.per-file-ignores]
 "src/qldebugger/example/*.py" = ["T20", "ARG001"]
