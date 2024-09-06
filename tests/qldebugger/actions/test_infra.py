@@ -1,11 +1,15 @@
+import json
+from collections import OrderedDict
 from random import randint
-from unittest.mock import Mock, patch
+from typing import Dict
+from unittest.mock import Mock, call, patch
 
 from botocore.exceptions import ClientError
 
 from qldebugger.actions.infra import create_queues, create_secrets, create_topics, subscribe_topics
 from qldebugger.config.file_parser import (
     ConfigQueue,
+    ConfigQueueRedrivePolicy,
     ConfigSecretBinary,
     ConfigSecretString,
     ConfigTopic,
@@ -105,17 +109,179 @@ class TestCreateTopics:
 class TestCreateQueues:
     @patch('qldebugger.actions.infra.get_client')
     @patch('qldebugger.actions.infra.get_config')
-    def test_run(self, mock_get_config: Mock, mock_get_client: Mock) -> None:
+    def test_create_queues(self, mock_get_config: Mock, mock_get_client: Mock) -> None:
         queues_names = [randstr() for _ in range(randint(2, 5))]
 
         mock_get_config.return_value.queues = {queue_name: ConfigQueue() for queue_name in queues_names}
+        mock_get_client.return_value.get_queue_url.side_effect = ClientError({}, '')
 
         create_queues()
 
         mock_get_client.assert_called_once_with('sqs')
         assert mock_get_client.return_value.create_queue.call_count == len(queues_names)
         for queue_name in queues_names:
-            mock_get_client.return_value.create_queue.assert_any_call(QueueName=queue_name)
+            mock_get_client.return_value.create_queue.assert_any_call(QueueName=queue_name, Attributes={})
+
+    @patch('qldebugger.actions.infra.get_client')
+    @patch('qldebugger.actions.infra.get_config')
+    def test_update_queues(self, mock_get_config: Mock, mock_get_client: Mock) -> None:
+        queues_names = [randstr() for _ in range(randint(2, 5))]
+        host = randstr()
+
+        mock_get_config.return_value.queues = {queue_name: ConfigQueue() for queue_name in queues_names}
+        mock_get_client.return_value.get_queue_url.side_effect = lambda QueueName: {  # noqa: N803
+            'QueueUrl': f'http://{host}/{QueueName}'
+        }
+
+        create_queues()
+
+        mock_get_client.assert_called_once_with('sqs')
+        assert mock_get_client.return_value.set_queue_attributes.call_count == len(queues_names)
+        for queue_name in queues_names:
+            mock_get_client.return_value.set_queue_attributes.assert_any_call(
+                QueueUrl=f'http://{host}/{queue_name}', Attributes={}
+            )
+
+    @patch('qldebugger.actions.infra.get_client')
+    @patch('qldebugger.actions.infra.get_config')
+    def test_dead_letter_queue_should_created_first(self, mock_get_config: Mock, mock_get_client: Mock) -> None:
+        a_max_receive_count = randint(1, 10)
+        b_max_receive_count = randint(1, 10)
+        queues = OrderedDict(
+            [
+                (
+                    'b',
+                    ConfigQueue(
+                        redrive_policy=ConfigQueueRedrivePolicy(
+                            dead_letter_queue='c', max_receive_count=b_max_receive_count
+                        )
+                    ),
+                ),
+                (
+                    'a',
+                    ConfigQueue(
+                        redrive_policy=ConfigQueueRedrivePolicy(
+                            dead_letter_queue='b', max_receive_count=a_max_receive_count
+                        )
+                    ),
+                ),
+                ('c', ConfigQueue()),
+            ]
+        )
+
+        mock_get_config.return_value.queues = queues
+        mock_get_client.return_value.get_queue_url.side_effect = ClientError({}, '')
+        mock_get_client.return_value.get_queue_attributes.side_effect = lambda QueueUrl, AttributeNames: {  # noqa: N803
+            'Attributes': {'QueueArn': f'arn:aws:sqs:us-east-1:123456789012:{QueueUrl}'}
+        }
+
+        create_queues()
+
+        mock_get_client.assert_called_once_with('sqs')
+        assert mock_get_client.return_value.create_queue.call_args_list == [
+            call(QueueName='c', Attributes={}),
+            call(
+                QueueName='b',
+                Attributes={
+                    'RedrivePolicy': json.dumps(
+                        {
+                            'deadLetterTargetArn': 'arn:aws:sqs:us-east-1:123456789012:c',
+                            'maxReceiveCount': b_max_receive_count,
+                        }
+                    )
+                },
+            ),
+            call(
+                QueueName='a',
+                Attributes={
+                    'RedrivePolicy': json.dumps(
+                        {
+                            'deadLetterTargetArn': 'arn:aws:sqs:us-east-1:123456789012:b',
+                            'maxReceiveCount': a_max_receive_count,
+                        }
+                    )
+                },
+            ),
+        ]
+
+    @patch('qldebugger.actions.infra.get_client')
+    @patch('qldebugger.actions.infra.get_config')
+    def test_create_dead_letter_queue_not_in_queues(self, mock_get_config: Mock, mock_get_client: Mock) -> None:
+        queue_name = randstr()
+        dead_letter_queue = randstr()
+        max_receive_count = randint(1, 10)
+
+        mock_get_config.return_value.queues = {
+            queue_name: ConfigQueue(
+                redrive_policy=ConfigQueueRedrivePolicy(
+                    dead_letter_queue=dead_letter_queue, max_receive_count=max_receive_count
+                )
+            )
+        }
+        mock_get_client.return_value.get_queue_url.side_effect = ClientError({}, '')
+        mock_get_client.return_value.get_queue_attributes.side_effect = lambda QueueUrl, AttributeNames: {  # noqa: N803
+            'Attributes': {'QueueArn': f'arn:aws:sqs:us-east-1:123456789012:{QueueUrl}'}
+        }
+
+        create_queues()
+
+        mock_get_client.assert_called_once_with('sqs')
+        assert mock_get_client.return_value.create_queue.call_args_list == [
+            call(QueueName=dead_letter_queue, Attributes={}),
+            call(
+                QueueName=queue_name,
+                Attributes={
+                    'RedrivePolicy': json.dumps(
+                        {
+                            'deadLetterTargetArn': f'arn:aws:sqs:us-east-1:123456789012:{dead_letter_queue}',
+                            'maxReceiveCount': max_receive_count,
+                        }
+                    )
+                },
+            ),
+        ]
+
+    @patch('qldebugger.actions.infra.get_client')
+    @patch('qldebugger.actions.infra.get_config')
+    def test_create_dead_letter_and_update_queue(self, mock_get_config: Mock, mock_get_client: Mock) -> None:
+        queue_name = randstr()
+        dead_letter_queue = randstr()
+        max_receive_count = randint(1, 10)
+        host = randstr()
+
+        def get_queue_url(*, QueueName: str) -> Dict[str, str]:  # noqa: N803
+            if QueueName != queue_name:
+                raise ClientError({}, '')
+            return {'QueueUrl': f'http://{host}/{QueueName}'}
+
+        mock_get_config.return_value.queues = {
+            queue_name: ConfigQueue(
+                redrive_policy=ConfigQueueRedrivePolicy(
+                    dead_letter_queue=dead_letter_queue, max_receive_count=max_receive_count
+                )
+            ),
+            dead_letter_queue: ConfigQueue(),
+        }
+        mock_get_client.return_value.get_queue_url.side_effect = get_queue_url
+        mock_get_client.return_value.get_queue_attributes.side_effect = lambda QueueUrl, AttributeNames: {  # noqa: N803
+            'Attributes': {'QueueArn': f'arn:aws:sqs:us-east-1:123456789012:{QueueUrl}'}
+        }
+
+        create_queues()
+
+        mock_get_client.assert_called_once_with('sqs')
+        mock_get_client.return_value.create_queue.assert_called_once_with(QueueName=dead_letter_queue, Attributes={})
+        mock_get_client.return_value.set_queue_attributes.assert_called_once_with(
+            QueueUrl=f'http://{host}/{queue_name}',
+            Attributes={
+                'RedrivePolicy': json.dumps(
+                    {
+                        'deadLetterTargetArn': f'arn:aws:sqs:us-east-1:123456789012:{dead_letter_queue}',
+                        'maxReceiveCount': max_receive_count,
+                    }
+                )
+            },
+        )
 
 
 class TestSubscribeTopics:

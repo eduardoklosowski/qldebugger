@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Any, BinaryIO, Dict, List, NamedTuple, Optional, Tuple, Union
 
 import tomli
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, PositiveInt, field_validator
 
 
 class ConfigAWS(BaseModel):
@@ -44,7 +44,13 @@ class ConfigTopic(BaseModel):
     subscribers: List[ConfigTopicSubscriber] = Field(default_factory=list)
 
 
-class ConfigQueue(BaseModel): ...
+class ConfigQueueRedrivePolicy(BaseModel):
+    dead_letter_queue: str
+    max_receive_count: PositiveInt
+
+
+class ConfigQueue(BaseModel):
+    redrive_policy: Optional[ConfigQueueRedrivePolicy] = None
 
 
 class NameHandlerTuple(NamedTuple):

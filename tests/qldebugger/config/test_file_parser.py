@@ -12,6 +12,7 @@ from qldebugger.config.file_parser import (
     ConfigEventSourceMapping,
     ConfigLambda,
     ConfigQueue,
+    ConfigQueueRedrivePolicy,
     ConfigSecretBinary,
     ConfigSecretString,
     ConfigTopic,
@@ -71,11 +72,25 @@ class TestConfigTopic:
         }
 
 
+class TestConfigQueueRedrivePolicy:
+    def test_required_fields(self) -> None:
+        required_fields = ['dead_letter_queue', 'max_receive_count']
+
+        with pytest.raises(ValidationError) as exc_info:
+            ConfigQueueRedrivePolicy.model_validate({})
+
+        assert {error['loc'] for error in exc_info.value.errors() if error['type'] == 'missing'} == {
+            (field,) for field in required_fields
+        }
+
+
 class TestConfigQueue:
-    def test_empty_object(self) -> None:
+    def test_default_values(self) -> None:
         returned = ConfigQueue()
 
-        assert returned.model_dump() == {}
+        assert returned.model_dump() == {
+            'redrive_policy': None,
+        }
 
 
 class TestNameHandlerTuple:
