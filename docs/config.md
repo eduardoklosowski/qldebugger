@@ -127,13 +127,35 @@ Define um filtro para que apenas as mensagens que atendam os critérios sejam en
 
 ## `queues`
 
-Essa seção é obrigatória e descreve as filas Amazon SQS utilizadas pelo Queue Lambda Debugger. Ela deve ser um dicionário, onde a chave é o nome da fila, e o valor é um dicionário com seus parâmetros, porém na versão atual nenhum parâmetro é definido. Exemplo:
+Essa seção é obrigatória e descreve as filas Amazon SQS utilizadas pelo Queue Lambda Debugger. Ela deve ser um dicionário, onde a chave é o nome da fila, e o valor é um dicionário com seus parâmetros. Exemplo:
 
 ```toml
 [queues]
-myqueue = {}
+myqueue = {redrive_policy = {dead_letter_queue = "myqueue2", max_receive_count = 3}}
 myqueue2 = {}
 ```
+
+### `queues.*.redrive_policy`
+
+- Parâmetro opcional
+- Tipo: `Optional[ConfigQueueRedrivePolicy]`
+- Valor padrão: `None`
+
+Define uma política para retentativas de processamento de mensagens da fila, enviando-a para outra fila ao ocorerrem certa quantidade de erros no processamento daquela mensagem.
+
+### `queues.*.redrive_policy.dead_letter_queue`
+
+- Parâmetro obrigatório
+- Tipo: `str`
+
+Nome da fila para onde a mensagem deverá ser enviada após certa quantidade de tentativas de processamento.
+
+### `queues.*.redrive_policy.max_receive_count`
+
+- Parâmetro obrigatório
+- Tipo: `int`
+
+Quantas vezes um mesma mensagem pode ser recuperada da fila antes de enviá-la para a fila dead letter.
 
 ## `lambdas`
 
