@@ -120,3 +120,24 @@ def msg_publish(topic_name: str, message: str, attributes: Mapping[str, 'Message
 def msg_send(queue_name: str, message: str) -> None:
     load_config(CONFIG_FILENAME)
     actions.message.send_message(queue_name=queue_name, message=message)
+
+
+@msg.command('receive')
+@click.argument('queue_name')
+@click.option('--batch-size', default=1, type=int, show_default=True)
+@click.option('--wait-seconds', default=0, type=int, show_default=True)
+def msg_receive(queue_name: str, batch_size: int, wait_seconds: int) -> None:
+    load_config(CONFIG_FILENAME)
+    messages = actions.message.receive_message(
+        queue_name=queue_name, batch_size=batch_size, maximum_batching_window=wait_seconds
+    )
+    for message in messages['Messages']:
+        click.echo(repr(message.get('Body')))
+    actions.message.delete_messages(queue_name=queue_name, messages=messages)
+
+
+@msg.command('purge')
+@click.argument('queue_name')
+def msg_purge(queue_name: str) -> None:
+    load_config(CONFIG_FILENAME)
+    actions.message.purge_messages(queue_name=queue_name)
