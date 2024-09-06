@@ -70,3 +70,10 @@ def delete_messages(*, queue_name: str, messages: 'ReceiveMessageResultTypeDef')
         ],
     )
     logger.info('Deleted %d messages from %r queue', len(messages['Messages']), queue_name)
+
+
+def purge_messages(*, queue_name: str) -> None:
+    sqs = get_client('sqs')
+    queue_url = sqs.get_queue_url(QueueName=queue_name)['QueueUrl']
+    logger.info('Purging messages of %r queue...', queue_name)
+    sqs.purge_queue(QueueUrl=queue_url)

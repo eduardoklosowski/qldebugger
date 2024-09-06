@@ -4,7 +4,7 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from qldebugger.actions.message import delete_messages, publish_message, receive_message, send_message
+from qldebugger.actions.message import delete_messages, publish_message, purge_messages, receive_message, send_message
 from tests.utils import randstr
 
 if TYPE_CHECKING:
@@ -156,3 +156,18 @@ class TestDeleteMessages:
                 for message in messages['Messages']
             ],
         )
+
+
+class TestPurgeMessages:
+    @patch('qldebugger.actions.message.get_client')
+    def test_run(self, mock_get_client: Mock) -> None:
+        queue_name = randstr()
+        queue_url = randstr()
+
+        mock_get_client.return_value.get_queue_url.return_value = {'QueueUrl': queue_url}
+
+        purge_messages(queue_name=queue_name)
+
+        mock_get_client.assert_called_once_with('sqs')
+        mock_get_client.return_value.get_queue_url.assert_called_once_with(QueueName=queue_name)
+        mock_get_client.return_value.purge_queue.assert_called_once_with(QueueUrl=queue_url)

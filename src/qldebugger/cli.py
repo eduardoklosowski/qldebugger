@@ -134,3 +134,10 @@ def msg_receive(queue_name: str, batch_size: int, wait_seconds: int) -> None:
     for message in messages['Messages']:
         click.echo(repr(message.get('Body')))
     actions.message.delete_messages(queue_name=queue_name, messages=messages)
+
+
+@msg.command('purge')
+@click.argument('queue_name')
+def msg_purge(queue_name: str) -> None:
+    load_config(CONFIG_FILENAME)
+    actions.message.purge_messages(queue_name=queue_name)
