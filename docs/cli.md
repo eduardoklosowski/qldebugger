@@ -51,3 +51,7 @@ Esse comando recebe o nome de um tópico SNS, uma mensagem e opcionalmente seus 
 ### `msg send <queue_name> <message>`
 
 Esse comando recebe o nome de uma fila Amazon SQS e uma mensagem, e executa o envio dessa mensagem para a fila no serviço configurado da AWS.
+
+### `msg receive [--batch-size=1] [--wait-seconds=0] <queue_name>`
+
+Esse comando recebe o nome de uma fila Amazon SQS, e recupera mensagens dela, removendo-as logo em seguinda. O parâmetro `--batch-size` define a quantidade máxima de mensagens que serão recuperadas, e o parâmetro `--wait-seconds` define a quantidade de tempo máximo que o cliente esperará por mensagens.
