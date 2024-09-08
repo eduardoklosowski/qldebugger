@@ -19,7 +19,7 @@ pip install git+https://github.com/eduardoklosowski/qldebugger.git
 Também é possível selecionar uma versão específica. Exemplo:
 
 ```sh
-pip install git+https://github.com/eduardoklosowski/qldebugger.git@v0.0.0
+pip install git+https://github.com/eduardoklosowski/qldebugger.git@v0.3.0
 ```
 
 ## Instalando via pacote da release
@@ -28,8 +28,8 @@ Outra opção é utilizar os pacotes gerados no lançamento de uma versão. Para
 
 ```sh
 # Pacote Wheel
-pip install https://github.com/eduardoklosowski/qldebugger/releases/download/v0.0.0/qldebugger-0.0.0-py3-none-any.whl
+pip install https://github.com/eduardoklosowski/qldebugger/releases/download/v0.3.0/qldebugger-0.3.0-py3-none-any.whl
 
 # Fonte
-pip install https://github.com/eduardoklosowski/qldebugger/releases/download/v0.0.0/qldebugger-0.0.0.tar.gz
+pip install https://github.com/eduardoklosowski/qldebugger/releases/download/v0.3.0/qldebugger-0.3.0.tar.gz
 ```
