@@ -2,7 +2,7 @@
 
 ## Instalando o Queue Lambda Debugger
 
-O Queue Lambda Debugger é testado no Python 3.8 ou superior e pode ser instalado pelo `pip` (ou outra ferramenta de gerenciamento de dependência, como o [Poetry](https://python-poetry.org/)). Exemplo:
+O Queue Lambda Debugger é testado no Python 3.9 ou superior e pode ser instalado pelo `pip` (ou outra ferramenta de gerenciamento de dependência, como o [Poetry](https://python-poetry.org/)). Exemplo:
 
 ```sh
 pip install qldebugger
