@@ -14,7 +14,7 @@
     }
   ],
 
-  "postCreateCommand": "./scripts/setup-devcontainer.sh",
+  "postCreateCommand": "./.devcontainer/setup.sh",
 
   "customizations": {
     "vscode": {
