@@ -38,7 +38,7 @@ boto3-stubs = {version = "^1.35", extras = ["secretsmanager", "sns", "sqs", "sts
 ruff = "^0.6"
 mypy = "^1.11"
 pytest = "^8.3"
-pytest-cov = "^5.0"
+pytest-cov = ">=5,<7"
 moto = {version = "^5.0", extras = ["server", "secretsmanager", "sns", "sqs", "sts"]}
 
 [tool.poetry.group.docs]
